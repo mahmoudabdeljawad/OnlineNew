@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Segmented Control Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Main CSS -->
+    <link href="assets/libs/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/tailwind.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/Main.css" rel="stylesheet">
+    
+    <style>
+        .segmented-control {
+            position: relative;
+            display: inline-flex;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin: 50px auto;
+        }
+        
+        .segmented-control-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            position: relative;
+            font-size: 18px;
+            z-index: 1;
+            transition: color 0.3s ease;
+        }
+        
+        .segmented-control-option.selected {
+            color: #000;
+        }
+        
+        .segmented-control-option:not(.selected) {
+            color: #666;
+        }
+        
+        .segmented-control-bg {
+            position: absolute;
+            height: 100%;
+            width: 50%;
+            background-color: #e0c087;
+            border-radius: 9999px;
+            transition: transform 0.3s ease;
+            z-index: 0;
+            left: 0;
+            top: 0;
+        }
+        
+        .segmented-control.corporate .segmented-control-bg {
+            transform: translateX(100%);
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body class="dark:bg-slate-900">
+    <div class="container">
+        <div class="segmented-control">
+            <div class="segmented-control-bg"></div>
+            <div class="segmented-control-option selected" onclick="selectOption('individual')">
+                Individual
+            </div>
+            <div class="segmented-control-option" onclick="selectOption('corporate')">
+                Corporate
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectOption(option) {
+            const control = document.querySelector('.segmented-control');
+            const options = document.querySelectorAll('.segmented-control-option');
+            
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            if (option === 'individual') {
+                control.classList.remove('corporate');
+                options[0].classList.add('selected');
+            } else {
+                control.classList.add('corporate');
+                options[1].classList.add('selected');
+            }
+        }
+    </script>
+</body>
+
+</html> 

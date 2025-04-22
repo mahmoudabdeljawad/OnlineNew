@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" class="light scroll-smooth" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Company - Hero Section</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Insurance Agency Website" name="description">
+    
+    <!-- Main Css -->
+    <link href="assets/css/tailwind.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/Main.css" rel="stylesheet">
+    
+    <style>
+        /* Custom styles for the hero section */
+        .hero-section {
+            position: relative;
+            border-radius: 56px;
+            background-color: #e0d7d7;
+            height: 539px;
+            overflow: hidden;
+            margin: 50px auto;
+            max-width: 1523px;
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1556742031-c6961e8560b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 56px;
+            opacity: 0.8;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #b69f70;
+            opacity: 0.67;
+            mix-blend-mode: color;
+            border-radius: 56px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            padding: 30px 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hero-title {
+            color: rgba(115, 102, 78, 0.5);
+            font-size: 36px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-left: 180px;
+            max-width: 573px;
+        }
+        
+        .insurance-box {
+            background-color: rgba(242, 242, 240, 0.97);
+            border-radius: 0;
+            padding: 30px 25px;
+            position: absolute;
+            bottom: 50px;
+            left: 23px;
+            width: 667px;
+            box-sizing: border-box;
+        }
+        
+        .box-title {
+            color: #fff;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: absolute;
+            top: -53px;
+            left: 180px;
+        }
+        
+        .insurance-types {
+            display: flex;
+            margin-bottom: 30px;
+            gap: 0;
+        }
+        
+        .insurance-type {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background-color: rgba(242, 242, 240, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .insurance-type.active {
+            background-color: rgba(242, 242, 240, 0.97);
+        }
+        
+        .insurance-type:hover:not(.active) {
+            background-color: rgba(242, 242, 240, 0.4);
+        }
+        
+        .insurance-type-icon {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .insurance-type-text {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .insurance-type.active .insurance-type-text {
+            color: #111;
+            font-weight: 500;
+        }
+        
+        .insurance-type.active .insurance-type-icon svg {
+            fill: #b69f70;
+        }
+        
+        .insurance-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-tabs {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .form-tab {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-tab:hover:not(.form-tab-active) .form-tab-text {
+            color: #555;
+        }
+        
+        .form-tab-active .form-tab-text {
+            color: #181818;
+            font-weight: 500;
+        }
+        
+        .form-tab-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            color: #b69f70;
+        }
+        
+        .form-tab-text {
+            font-size: 14px;
+            color: #181818;
+        }
+        
+        .form-divider {
+            width: 1px;
+            height: 40px;
+            background-color: #aaa;
+            margin: 0 15px;
+        }
+        
+        .form-input-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+        
+        .form-input {
+            flex: 1;
+            border: 1px solid #ccc;
+            border-radius: 45px;
+            padding: 15px 20px;
+            font-size: 14px;
+            color: #777;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #b69f70;
+            box-shadow: 0 0 0 2px rgba(182, 159, 112, 0.1);
+        }
+        
+        .form-button {
+            background-color: #b69f70;
+            color: white;
+            border: none;
+            border-radius: 45px;
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-button:hover {
+            background-color: #9f8b5c;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                height: auto;
+                min-height: 600px;
+            }
+            
+            .hero-title {
+                margin-left: 20px;
+                font-size: 28px;
+                max-width: 90%;
+            }
+            
+            .insurance-box {
+                position: relative;
+                width: 90%;
+                margin: 80px auto 30px;
+                left: 0;
+                bottom: 0;
+            }
+            
+            .box-title {
+                left: 25px;
+                top: -50px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .insurance-types {
+                flex-wrap: wrap;
+            }
+            
+            .insurance-type {
+                flex: 0 0 50%;
+                padding: 15px 5px;
+            }
+            
+            .form-input-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-button {
+                width: 100%;
+            }
+            
+            .hero-title {
+                font-size: 24px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark:bg-slate-900">
+    <div class="container mx-auto px-4">
+        <div class="hero-section">
+            <div class="hero-background">
+                <!-- Background image added via CSS -->
+            </div>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content">
+                <h2 class="hero-title">Join Thousands Who Trust Us for Their Insurance Needs</h2>
+                
+                <div class="insurance-box">
+                    <h3 class="box-title">Select your insurance</h3>
+                    
+                    <div class="insurance-types">
+                        <div class="insurance-type active">
+                            <div class="insurance-type-icon">
+                                <!-- Motor icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="#b69f70">
+                                    <path d="M3.47 12.14C1.73 12.14 0 13 0 14.74c0 1.74 1.73 2.6 3.47 2.6s3.47-.87 3.47-2.6c0-1.74-1.73-2.6-3.47-2.6zm21.06 0c-1.73 0-3.47.87-3.47 2.6 0 1.74 1.73 2.6 3.47 2.6S28 16.47 28 14.74c0-1.74-1.73-2.6-3.47-2.6zM24.28 5.2c-.87-.87-1.73-1.74-3.47-1.74H7.8C6.07 3.47 4.33 4.33 3.47 5.2 1.73 6.93 0 9.53 0 12.14v6.93c0 .87.87 1.74 1.73 1.74h1.74c.87 0 1.73-.87 1.73-1.74v-.87h17.33v.87c0 .87.87 1.74 1.73 1.74h1.74c.87 0 1.73-.87 1.73-1.74v-6.93c0-2.6-1.73-5.2-3.47-6.93zM7.8 16.47c-1.73 0-2.6-.87-2.6-1.74 0-.87.87-1.74 1.74-1.74.87 0 1.73.87 1.73 1.74.87.87 0 1.74-.87 1.74zm12.4 0c-.87 0-1.73-.87-1.73-1.74 0-.87.87-1.74 1.73-1.74.87 0 1.73.87 1.73 1.74 0 .87-.86 1.74-1.73 1.74zm2.6-6.06H5.2c-.87 0-.87-.87-.87-1.74 0-.87.87-1.74 1.74-2.6.87-.87 2.6-.87 3.47-.87h8.67c.87 0 2.6 0 3.47.87.87.87 1.73 1.73 1.73 2.6 0 .87 0 1.74-.87 1.74z"/>
+                                </svg>
+                            </div>
+                            <div class="insurance-type-text">Motor</div>
+                        </div>
+                        <div class="insurance-type">
+                            <div class="insurance-type-icon">
+                                <!-- Medical icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#777">
+                                    <path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>
+                                </svg>
+                            </div>
+                            <div class="insurance-type-text">Medical</div>
+                        </div>
+                        <div class="insurance-type">
+                            <div class="insurance-type-icon">
+                                <!-- Travel icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#777">
+                                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
+                                </svg>
+                            </div>
+                            <div class="insurance-type-text">Travel</div>
+                        </div>
+                        <div class="insurance-type">
+                            <div class="insurance-type-icon">
+                                <!-- Business icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#777">
+                                    <path d="M17 11V3H7v8H3v10h18V11h-4zm-2-3V5h2v3h-2zm0 0V5h2v3h-2z"/>
+                                </svg>
+                            </div>
+                            <div class="insurance-type-text">Business</div>
+                        </div>
+                    </div>
+                    
+                    <div class="insurance-form">
+                        <div class="form-tabs">
+                            <div class="form-tab form-tab-active">
+                                <div class="form-tab-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#b69f70">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <div class="form-tab-text">Individual</div>
+                            </div>
+                            
+                            <div class="form-divider"></div>
+                            
+                            <div class="form-tab">
+                                <div class="form-tab-text">Corporate</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-input-group">
+                            <input type="text" class="form-input" placeholder="Insured Qatari ID">
+                            <button class="form-button">Sign in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add some simple JavaScript to make the insurance types clickable -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const insuranceTypes = document.querySelectorAll('.insurance-type');
+            
+            insuranceTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    // Remove active class from all types
+                    insuranceTypes.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked type
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+
+</html> 

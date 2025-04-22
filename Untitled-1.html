@@ -1,0 +1,5297 @@
+<html>
+
+<head>
+    <style type="text/css">
+        .turbo-progress-bar {
+            position: fixed;
+            display: block;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: #0076ff;
+            z-index: 9999;
+            transition:
+                width 300ms ease-out,
+                opacity 150ms 150ms ease-in;
+            transform: translate3d(0, 0, 0);
+        }
+    </style>
+    <style id="st_globalStyles">
+        /* MEDIA QUERIES */
+        .anima-desktop-only {
+            @media (max-width: 768px) {
+                display: none !important;
+            }
+        }
+
+        /* SCROLLBAR */
+
+        [dark-scroll]::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        [dark-scroll]::-webkit-scrollbar-track-piece {
+            background-color: #2b2b2b;
+            border: 1px solid #1d1d1d;
+        }
+
+        [dark-scroll]::-webkit-scrollbar-thumb {
+            height: 10px;
+            background-color: #4d4d4d;
+        }
+
+        [dark-scroll]::-webkit-scrollbar-thumb:hover {
+            background-color: #5a5a5a;
+        }
+
+        /* LOAD PROGRESS */
+
+        .turbolinks-progress-bar {
+            height: 3px;
+            background-color: #ff6250;
+        }
+
+        /* GROUPING */
+
+        [data-id].ui-selecting {
+            box-shadow: inset 0 0 0 1px #4285f4 !important;
+        }
+
+        [data-id].ui-selected {
+            box-shadow: inset 0 0 0 1px #4285f4 !important;
+        }
+
+        /* CURSOR */
+
+        body[mode='comments'] * {
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00LjkxNjQ4IDIzLjQxMDlDNS40OTE1MyAyMi45ODg3IDUuOTMxNzkgMjIuMzkzNSA2LjIzMjggMjEuNjQwN0M0Ljc5MDY5IDE5LjczODMgNCAxNy4zOTMzIDQgMTQuOTk3NUM0IDguOTM0MSA4LjkzMjgyIDQgMTUuMDAyMiA0QzIxLjA3MTcgNCAyNiA4LjkzOTE5IDI2IDE1LjAwMjVDMjYgMjEuMDY1OSAyMS4wNjcyIDI2IDE0Ljk5NzggMjZDMTIuOTg5NiAyNiAxMS4wMzUzIDI1LjQ1NTcgOS4zMjM2NyAyNC40MjMxQzguNDI5NjUgMjQuOTU3MiA3LjQxNDM0IDI1LjIyNjggNi4zMDAxOCAyNS4yMjY4QzUuOTU0MjYgMjUuMjI2OCA1LjU5OTM1IDI1LjIwMTQgNS4yNTM0MiAyNS4xNDU0QzQuOTAzIDI1LjA4OTUgNC42Mjg5NiAyNC44MDQ2IDQuNTUyNTggMjQuNDE4QzQuNDc2MjEgMjQuMDI2NCA0LjYxOTk3IDIzLjYyOTYgNC45MTY0OCAyMy40MTA5WiIgZmlsbD0iI0ZGNjI1MCIvPgo8L3N2Zz4K') 0 24,
+                auto !important;
+        }
+
+        body[mode='code'] [data-id]:not(.hidden) {
+            cursor: default;
+        }
+
+        /* default node state */
+
+        body[mode='code'] [data-id]:not(.hidden),
+        body[mode='comments'] [data-id]:not(.hidden) {
+            pointer-events: all;
+        }
+
+        /* is_image */
+
+        body[mode='code'] [data-id].is_image [data-id],
+        body[mode='comments'] [data-id].is_image [data-id] {
+            pointer-events: none !important;
+        }
+
+        /* without a data-id or ignored */
+
+        [data-id].ignore,
+        body[mode='code'] *:not([data-id]) {
+            pointer-events: none !important;
+        }
+
+        /* disable transforms for ignored elements */
+
+
+        body[mode='code'] [data-id]:hover {
+            transform: none !important;
+        }
+
+        /* ANIMA BUTTONS */
+        .an-button {
+            position: relative;
+            height: 28px;
+            padding: 0 20px;
+            font-size: 14px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            white-space: nowrap;
+            transition-property: all;
+            transition-duration: 100ms;
+            appearance: none;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            border-width: 0;
+        }
+
+        .an-button>div {
+            width: 100%;
+        }
+
+        .an-button.primary {
+            background: #ff6250;
+            color: #ffffff;
+        }
+
+        .an-button.primary:hover:not(:disabled) {
+            background: #e2412e;
+        }
+
+        .an-button.secondary {
+            background: transparent;
+            border: 1px solid #ff6250;
+            color: #ff6250;
+        }
+
+        .an-button.secondary:hover:not(:disabled) {
+            color: #ffffff;
+            background: #ff6250;
+        }
+
+        .an-button.rounded {
+            border-radius: 100px;
+        }
+
+        .an-button:disabled {
+            opacity: 0.5;
+        }
+
+        .an-button:disabled {
+            cursor: default;
+        }
+
+        .an-button:active,
+        .an-button:focus {
+            outline: none;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="shortcut icon" type="image/png" href="https://animaproject.s3.amazonaws.com/home/favicon.png">
+    <meta name="og:type" content="website">
+    <meta name="twitter:card" content="photo">
+    <script id="anima-load-script" src="load.js"></script>
+    <script id="anima-hotspots-script" src="hotspots.js"></script>
+    <style id="hotspots-styles">
+        .hotspot {
+            position: absolute;
+            border: 1px solid #2a9fd8;
+            background: rgba(0, 173, 255, 0.54);
+            opacity: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+    <script id="s_turbo" src="https://animaapp.s3.amazonaws.com/static/turbo.es2017-umd.js"></script>
+    <script id="anima-overrides-script" src="overrides.js"></script>
+    <script src="https://animaapp.s3.amazonaws.com/js/timeline.js"></script>
+    <style>
+        @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+
+        @import url("https://fonts.googleapis.com/css?family=Montserrat:400|Poppins:200italic,200,700,600,500,400|Open+Sans:400,700|Bebas+Neue:700,400|Nunito+Sans:400");
+
+        .component-wrapper a {
+            display: contents;
+            pointer-events: auto;
+            text-decoration: none;
+        }
+
+        .component-wrapper * {
+            -webkit-font-smoothing: antialiased;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        .component-wrapper a *,
+        .component-wrapper input,
+        .component-wrapper video,
+        .component-wrapper iframe {
+            pointer-events: auto;
+        }
+
+        .component-wrapper.not-ready,
+        .component-wrapper.not-ready * {
+            visibility: hidden !important;
+        }
+
+        .screen a {
+            display: contents;
+            text-decoration: none;
+        }
+
+        .full-width-a {
+            width: 100%;
+        }
+
+        .full-height-a {
+            height: 100%;
+        }
+
+        .container-center-vertical {
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .container-center-vertical>* {
+            flex-shrink: 0;
+            pointer-events: auto;
+        }
+
+        .container-center-horizontal {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            pointer-events: none;
+            width: 100%;
+        }
+
+        .container-center-horizontal>* {
+            flex-shrink: 0;
+            pointer-events: auto;
+        }
+
+        .auto-animated div {
+            --z-index: -1;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .auto-animated input {
+            --z-index: -1;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .auto-animated .container-center-vertical,
+        .auto-animated .container-center-horizontal {
+            opacity: 1;
+        }
+
+        .overlay-base {
+            display: none;
+            height: 100%;
+            opacity: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .overlay-base.animate-appear {
+            align-items: center;
+            animation: reveal 0.3s ease-in-out 1 normal forwards;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+        }
+
+        .overlay-base.animate-disappear {
+            animation: reveal 0.3s ease-in-out 1 reverse forwards;
+            display: block;
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .overlay-base.animate-disappear * {
+            pointer-events: none;
+        }
+
+        @keyframes reveal {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .animate-nodelay {
+            animation-delay: 0s;
+        }
+
+        .align-self-flex-start {
+            align-self: flex-start;
+        }
+
+        .align-self-flex-end {
+            align-self: flex-end;
+        }
+
+        .align-self-flex-center {
+            align-self: flex-center;
+        }
+
+        .valign-text-middle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .valign-text-bottom {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .listeners-active,
+        .listeners-active * {
+            pointer-events: auto;
+        }
+
+        .hidden,
+        .hidden * {
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .smart-layers-pointers,
+        .smart-layers-pointers * {
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        .listeners-active-click,
+        .listeners-active-click * {
+            cursor: pointer;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #2e2e2e;
+            --black-2: #000000;
+            --chicago: #5a5a5a;
+            --coconut: #fdfdfd;
+            --concrete: #f2f2f0e6;
+            --concrete-2: #f2f2f0;
+            --coral-reef: #cdbd9f;
+            --gray-2: #909090;
+            --log-cabin: #212121;
+            --mine-shaft: #313131;
+            --mongoose: #baa071;
+            --mongoose-2: #b99f70;
+            --muesli: #b0855b;
+            --onyx: #3a3a39;
+            --pale-slate: #c2c2c1;
+            --soft-amber: #cec6b8;
+            --storm-dust: #646464;
+            --white: #ffffff;
+
+            --font-size-l: 24px;
+            --font-size-m: 22px;
+            --font-size-s: 19px;
+            --font-size-xl: 30px;
+            --font-size-xs: 18px;
+            --font-size-xxl: 96px;
+            --font-size-xxs: 15.6px;
+
+            --font-family-basic_sans_sf-bold: "Basic Sans SF-Bold", Helvetica;
+            --font-family-bebas_neue: "Bebas Neue", Helvetica;
+            --font-family-montserrat: "Montserrat", Helvetica;
+            --font-family-nunito_sans: "Nunito Sans", Helvetica;
+            --font-family-open_sans: "Open Sans", Helvetica;
+            --font-family-poppins: "Poppins", Helvetica;
+        }
+
+        .texttext-2 {
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xs);
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: 0px;
+        }
+
+        .poppins-normal-gray-22px {
+            color: var(--gray-2);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-m);
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        .opensans-bold-log-cabin-24px {
+            color: var(--log-cabin);
+            font-family: var(--font-family-open_sans);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .poppins-bold-gray-30px {
+            color: var(--gray-2);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xl);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .opensans-bold-white-24px {
+            font-family: var(--font-family-open_sans);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .opensans-normal-storm-dust-16px {
+            color: var(--storm-dust);
+            font-family: var(--font-family-open_sans);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        .basicsanssf-bold-muesli-96px {
+            color: var(--muesli);
+            font-family: var(--font-family-basic_sans_sf-bold);
+            font-size: var(--font-size-xxl);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .poppins-semi-bold-white-24px {
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .poppins-semi-bold-log-cabin-24px {
+            color: var(--log-cabin);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .poppins-normal-white-22px {
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-m);
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        .poppins-semi-bold-mongoose-22px {
+            color: var(--mongoose);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-m);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        .opensans-bold-black-24px {
+            color: var(--black-2);
+            font-family: var(--font-family-open_sans);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .poppins-bold-mine-shaft-56px {
+            color: var(--mine-shaft);
+            font-family: var(--font-family-poppins);
+            font-size: 56px;
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .poppins-medium-mongoose-16px {
+            color: var(--mongoose-2);
+            font-family: var(--font-family-poppins);
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .poppins-bold-thunder-15-6px {
+            color: var(--black);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .bebasneue-bold-mine-shaft-96px {
+            color: var(--mine-shaft);
+            font-family: var(--font-family-bebas_neue);
+            font-size: var(--font-size-xxl);
+            font-style: normal;
+            font-weight: 700;
+        }
+
+        .poppins-medium-pale-slate-15-6px {
+            color: var(--pale-slate);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        .poppins-normal-chicago-20px {
+            color: var(--chicago);
+            font-family: var(--font-family-poppins);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+
+
+        /* screen - 10u46-dig-1 */
+
+        .x10u46-dig-1 {
+            background-color: var(--white);
+            height: 4858px;
+            overflow: hidden;
+            overflow-x: hidden;
+            position: relative;
+            width: 1920px;
+        }
+
+        .x10u46-dig-1 .footer {
+            background-color: transparent;
+            height: 451px;
+            left: 1px;
+            position: absolute;
+            top: 4297px;
+            width: 1926px;
+        }
+
+        .x10u46-dig-1 .auto-flex {
+            height: 71px;
+            left: 0px;
+            top: 380px;
+            width: 1919px;
+        }
+
+        .x10u46-dig-1 .frame-2 {
+            display: inline-flex;
+            gap: 27px;
+            left: 594px;
+            position: absolute;
+            top: 30px;
+        }
+
+        .x10u46-dig-1 .logo {
+            background-color: transparent;
+            height: 40.85px;
+            position: relative;
+            width: 39.66px;
+        }
+
+        .x10u46-dig-1 .x2025-doha-insuranc {
+            background-color: transparent;
+            color: var(--storm-dust);
+            font-family: var(--font-family-montserrat);
+            font-size: var(--font-size-xs);
+            font-style: normal;
+            font-weight: 400;
+            height: 21px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            white-space: nowrap;
+            width: 666px;
+        }
+
+        .x10u46-dig-1 .line-2 {
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            top: 0px;
+            width: 1919px;
+        }
+
+        .x10u46-dig-1 .auto-flex2 {
+            height: 255px;
+            left: 249px;
+            top: 80px;
+            width: 1247px;
+        }
+
+        .x10u46-dig-1 .quick-links-about-ou {
+            background-color: transparent;
+            height: auto;
+            left: 424px;
+            letter-spacing: 0.00px;
+            line-height: 24px;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .span0 {
+            line-height: 40px;
+        }
+
+        .x10u46-dig-1 .span1 {
+            color: var(--storm-dust);
+            font-style: normal;
+            font-weight: 400;
+            line-height: 50px;
+        }
+
+        .x10u46-dig-1 .span2 {
+            color: var(--storm-dust);
+            font-style: normal;
+            font-weight: 400;
+            line-height: 40px;
+        }
+
+        .x10u46-dig-1 .more-for-dig-about-c {
+            background-color: transparent;
+            height: auto;
+            left: 707px;
+            letter-spacing: 0.00px;
+            line-height: 24px;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .auto-flex1 {
+            height: 96px;
+            left: 1014px;
+            top: 2px;
+            width: 233px;
+        }
+
+        .x10u46-dig-1 .group-36 {
+            background-color: transparent;
+            height: 50px;
+            left: 0px;
+            position: absolute;
+            top: 45px;
+            width: 233px;
+        }
+
+        .x10u46-dig-1 .group-32 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-1 .x12 {
+            background-color: transparent;
+            height: 26px;
+            left: 11px;
+            object-fit: cover;
+            position: absolute;
+            top: 12px;
+            width: 27px;
+        }
+
+        .x10u46-dig-1 .layer_1 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-7.svg);
+            background-size: 100% 100%;
+            height: 50px;
+            left: 61px;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-1 .group {
+            background-color: transparent;
+            height: 27px;
+            left: 12px;
+            position: absolute;
+            top: 12px;
+            width: 26px;
+        }
+
+        .x10u46-dig-1 .group-34 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 122px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-1 .instagram {
+            background-color: transparent;
+            height: 26px;
+            left: 12px;
+            object-fit: cover;
+            position: absolute;
+            top: 13px;
+            width: 26px;
+        }
+
+        .x10u46-dig-1 .group-35 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 183px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-1 .linked-in-logo-of-two-letters {
+            background-color: transparent;
+            height: 27px;
+            left: 13px;
+            object-fit: cover;
+            position: absolute;
+            top: 10px;
+            width: 28px;
+        }
+
+        .x10u46-dig-1 .follow-us {
+            background-color: transparent;
+            color: #111111;
+            font-family: var(--font-family-open_sans);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 0px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .overlap-group-3 {
+            background-color: var(--concrete-2);
+            border-radius: 37px;
+            height: 251px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 280px;
+        }
+
+        .x10u46-dig-1 .download-our-app {
+            background-color: transparent;
+            height: auto;
+            left: 27px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 23px;
+            white-space: nowrap;
+            width: 226px;
+        }
+
+        .x10u46-dig-1 .overlap-group1 {
+            background-color: transparent;
+            height: 146px;
+            left: 67px;
+            position: absolute;
+            top: 70px;
+            width: 146px;
+        }
+
+        .x10u46-dig-1 .rectangle-19 {
+            background-color: transparent;
+            border: 2px solid;
+            border-color: var(--log-cabin);
+            border-radius: 13px;
+            height: 132px;
+            left: 7px;
+            position: absolute;
+            top: 7px;
+            width: 132px;
+        }
+
+        .x10u46-dig-1 .qr_code_for_mobile_ {
+            background-color: transparent;
+            height: 146px;
+            left: 0px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 146px;
+        }
+
+        .x10u46-dig-1 .line-3 {
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            top: -1px;
+            width: 1919px;
+        }
+
+        .x10u46-dig-1 .secure {
+            background-color: transparent;
+            height: 345px;
+            left: 161px;
+            position: absolute;
+            top: 3857px;
+            width: 1604px;
+        }
+
+        .x10u46-dig-1 .overlap-group2 {
+            background-color: transparent;
+            height: 345px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .background {
+            background-color: transparent;
+            height: 332px;
+            left: 0px;
+            position: absolute;
+            top: 8px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .at-doha-insurance-gr {
+            background-color: transparent;
+            height: auto;
+            left: 513px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: left;
+            top: 138px;
+            width: 950px;
+        }
+
+        .x10u46-dig-1 .secure-protect-you {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-bebas_neue);
+            font-size: 60px;
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 513px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 41px;
+            width: 873px;
+        }
+
+        .x10u46-dig-1 .protect-info-copy-1 {
+            background-color: transparent;
+            height: 345px;
+            left: 84px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 326px;
+        }
+
+        .x10u46-dig-1 .get-in-touch {
+            background-color: transparent;
+            height: 498px;
+            left: 160px;
+            position: absolute;
+            top: 3267px;
+            width: 1602px;
+        }
+
+        .x10u46-dig-1 .auto-flex3 {
+            height: 362px;
+            left: 0px;
+            top: 136px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .start-chat-on-whats-app {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 0px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-1 .group-10 {
+            background-color: transparent;
+            height: 80.87px;
+            position: relative;
+            width: 80.87px;
+        }
+
+        .x10u46-dig-1 .overlap-group {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/vector-22.svg);
+            background-size: 100% 100%;
+            height: 84px;
+            left: -2px;
+            position: relative;
+            top: -2px;
+            width: 84px;
+        }
+
+        .x10u46-dig-1 .group-1 {
+            background-color: transparent;
+            height: 47px;
+            left: 19px;
+            position: absolute;
+            top: 19px;
+            width: 47px;
+        }
+
+        .x10u46-dig-1 .start-chat-on-whats-app-1 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-1 .frame-6 {
+            border: 0.5px solid;
+            border-color: var(--mongoose);
+            border-radius: 49px;
+            display: flex;
+            gap: 10px;
+            height: 60px;
+            justify-content: center;
+            padding: 16px 63px;
+            position: relative;
+            width: 237px;
+        }
+
+        .x10u46-dig-1 .chat-on-whats-app {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin-left: -30.00px;
+            margin-right: -30.00px;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .call-us-to {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 539px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-1 .group-2 {
+            background-color: transparent;
+            height: 38px;
+            left: 23px;
+            position: absolute;
+            top: 23px;
+            width: 38px;
+        }
+
+        .x10u46-dig-1 .call-us-to-1 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-1 .phone {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            cursor: pointer;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin-left: -20.00px;
+            margin-right: -20.00px;
+            position: relative;
+            text-align: left;
+            text-decoration: underline;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .email-us-to {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 1078px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-1 .overlap-group-4 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/group-104@2x.png);
+            background-size: 100% 100%;
+            height: 84px;
+            left: -2px;
+            position: relative;
+            top: -2px;
+            width: 84px;
+        }
+
+        .x10u46-dig-1 .vector-1 {
+            height: 33px;
+            left: 20px;
+            top: 25px;
+            width: 43px;
+        }
+
+        .x10u46-dig-1 .email-us-to-1 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-1 .learn-more {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .title {
+            background-color: transparent;
+            color: var(--onyx);
+            font-family: var(--font-family-bebas_neue);
+            font-size: var(--font-size-xxl);
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 589px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: 421px;
+        }
+
+        .x10u46-dig-1 .about-dig {
+            background-color: transparent;
+            height: 415px;
+            left: 160px;
+            position: absolute;
+            top: 2752px;
+            width: 1604px;
+        }
+
+        .x10u46-dig-1 .overlap-group3 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f218841f435018d7ee3cd2/img/background-3.svg);
+            background-size: 100% 100%;
+            height: 415px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .mask-group {
+            background-color: transparent;
+            height: 415px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .at-doha-insurance-gr-1 {
+            background-color: transparent;
+            height: auto;
+            left: 67px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: left;
+            top: 184px;
+            width: 950px;
+        }
+
+        .x10u46-dig-1 .about-dig-1 {
+            background-color: transparent;
+            height: auto;
+            left: 67px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 72px;
+            width: 784px;
+        }
+
+        .x10u46-dig-1 .customer-reviews {
+            background-color: transparent;
+            height: 342px;
+            left: 160px;
+            position: absolute;
+            top: 2310px;
+            width: 1603px;
+        }
+
+        .x10u46-dig-1 .testimonials {
+            background-color: transparent;
+            color: var(--storm-dust);
+            font-family: var(--font-family-poppins);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 730px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .client-says-about-us {
+            background-color: transparent;
+            color: var(--onyx);
+            font-family: var(--font-family-bebas_neue);
+            font-size: 64px;
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 584px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: center;
+            top: 37px;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .frame-1 {
+            display: inline-flex;
+            gap: 38px;
+            left: 0px;
+            position: absolute;
+            top: 160px;
+        }
+
+        .x10u46-dig-1 .group-88 {
+            background-color: transparent;
+            height: 182.05px;
+            position: relative;
+            width: 515.08px;
+        }
+
+        .x10u46-dig-1 .overlap-group-5 {
+            background-color: transparent;
+            height: 182px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 509px;
+        }
+
+        .x10u46-dig-1 .rectangle-17 {
+            background-color: var(--concrete);
+            border-radius: 37px;
+            height: 182px;
+            left: 49px;
+            position: absolute;
+            top: 0px;
+            width: 460px;
+        }
+
+        .x10u46-dig-1 .name {
+            background-color: transparent;
+            height: auto;
+            left: 130px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 33px;
+            white-space: nowrap;
+            width: 321px;
+        }
+
+        .x10u46-dig-1 .text-1 {
+            height: auto;
+            left: 451px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 12px;
+            width: 31px;
+        }
+
+        .x10u46-dig-1 .lorem-ipsum-dolor-si {
+            background-color: transparent;
+            height: 65px;
+            left: 130px;
+            position: absolute;
+            top: 71px;
+            width: 338px;
+        }
+
+        .x10u46-dig-1 .group-8 {
+            background-color: var(--coral-reef);
+            border-radius: 52.5px;
+            height: 105px;
+            left: 0px;
+            position: absolute;
+            top: 39px;
+            width: 105px;
+        }
+
+        .x10u46-dig-1 .group-86 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person-@2x.png);
+            background-size: 100% 100%;
+            height: 65px;
+            left: 20px;
+            position: relative;
+            top: 17px;
+            width: 65px;
+        }
+
+        .x10u46-dig-1 .group-87 {
+            background-color: transparent;
+            height: 182.05px;
+            position: relative;
+            width: 513.14px;
+        }
+
+        .x10u46-dig-1 .overlap-group-1 {
+            background-color: transparent;
+            height: 182px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 507px;
+        }
+
+        .x10u46-dig-1 .rectangle-18 {
+            background-color: var(--concrete);
+            border-radius: 37px;
+            height: 182px;
+            left: 47px;
+            position: absolute;
+            top: 0px;
+            width: 460px;
+        }
+
+        .x10u46-dig-1 .rekha-varadwaz-manager {
+            background-color: transparent;
+            height: auto;
+            left: 130px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 33px;
+            white-space: nowrap;
+            width: 345px;
+        }
+
+        .x10u46-dig-1 .text {
+            background-color: transparent;
+            height: auto;
+            left: 452px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 12px;
+            white-space: nowrap;
+            width: 31px;
+        }
+
+        .x10u46-dig-1 .group-86-1 {
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--1@2x.png);
+        }
+
+        .x10u46-dig-1 .group-89 {
+            background-color: transparent;
+            height: 182.05px;
+            margin-right: -6.00px;
+            position: relative;
+            width: 513.14px;
+        }
+
+        .x10u46-dig-1 .name-1 {
+            background-color: transparent;
+            height: auto;
+            left: 130px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 33px;
+            white-space: nowrap;
+            width: 345px;
+        }
+
+        .x10u46-dig-1 .group-86-2 {
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--2@2x.png);
+        }
+
+        .x10u46-dig-1 .x2-fun-fact {
+            background-color: transparent;
+            border-radius: 150px;
+            height: 274px;
+            left: 160px;
+            overflow: hidden;
+            position: absolute;
+            top: 1936px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .container {
+            align-items: center;
+            background-color: transparent;
+            display: flex;
+            justify-content: space-between;
+            left: 99px;
+            position: relative;
+            top: 100px;
+            width: 1392px;
+        }
+
+        .x10u46-dig-1 .fun-fact {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            flex: 0 0 auto;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+        }
+
+        .x10u46-dig-1 .x34-k {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            line-height: 67.2px;
+            margin-top: -1.00px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .success-stories {
+            background-color: transparent;
+            letter-spacing: -0.48px;
+            line-height: 25.6px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .line {
+            background-color: transparent;
+            height: 60px;
+            object-fit: cover;
+            position: relative;
+            width: 1px;
+        }
+
+        .x10u46-dig-1 .text-4 {
+            line-height: 67.2px;
+            margin-top: -1.00px;
+            position: relative;
+            text-align: center;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .professional-team {
+            background-color: transparent;
+            letter-spacing: -0.48px;
+            line-height: 25.6px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .x54-k {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            line-height: 67.2px;
+            margin-top: -1.00px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .branches-nationwide {
+            background-color: transparent;
+            letter-spacing: -0.48px;
+            line-height: 25.6px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .x35-k {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            line-height: 67.2px;
+            margin-top: -1.00px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .worldwide-clients {
+            background-color: transparent;
+            letter-spacing: -0.48px;
+            line-height: 25.6px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .overlap-group11 {
+            background-color: transparent;
+            height: 1003px;
+            left: 0px;
+            position: absolute;
+            top: 853px;
+            width: 1920px;
+        }
+
+        .x10u46-dig-1 .services {
+            background-color: #f9faf8;
+            height: 1003px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 1920px;
+        }
+
+        .x10u46-dig-1 .overlap-group5 {
+            background-color: transparent;
+            height: 289px;
+            left: 160px;
+            position: absolute;
+            top: 643px;
+            width: 1599px;
+        }
+
+        .x10u46-dig-1 .travel {
+            background-color: transparent;
+            height: 289px;
+            left: 1238px;
+            position: absolute;
+            top: 0px;
+            width: 361px;
+        }
+
+        .x10u46-dig-1 .overlap-group-6 {
+            background-color: transparent;
+            height: 307px;
+            left: 55px;
+            position: relative;
+            top: -19px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .travel-1 {
+            left: 49px;
+            line-height: 40px;
+            text-align: center;
+            top: 267px;
+            width: 208px;
+        }
+
+        .x10u46-dig-1 .vector-2 {
+            height: 240px;
+            left: 0px;
+            top: 19px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .image_fx_-11-copy {
+            background-color: transparent;
+            height: 274px;
+            left: 16px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 274px;
+        }
+
+        .x10u46-dig-1 .home {
+            background-color: transparent;
+            height: 289px;
+            left: 942px;
+            position: absolute;
+            top: 0px;
+            width: 361px;
+        }
+
+        .x10u46-dig-1 .place {
+            background-color: transparent;
+            height: auto;
+            left: 76px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: center;
+            top: 248px;
+            width: 208px;
+        }
+
+        .x10u46-dig-1 .overlap-group1-1 {
+            background-color: transparent;
+            height: 288px;
+            left: 27px;
+            position: absolute;
+            top: -42px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .vector-3 {
+            height: 240px;
+            left: 0px;
+            top: 42px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .image_fx_-23-copy {
+            background-color: transparent;
+            height: 288px;
+            left: 10px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 288px;
+        }
+
+        .x10u46-dig-1 .yacht {
+            background-color: transparent;
+            height: 289px;
+            left: 619px;
+            position: absolute;
+            top: 0px;
+            width: 362px;
+        }
+
+        .x10u46-dig-1 .overlap-group-2 {
+            background-color: transparent;
+            height: 314px;
+            left: 28px;
+            position: relative;
+            top: -26px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .boat-yacht {
+            background-color: transparent;
+            height: auto;
+            left: 49px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: center;
+            top: 274px;
+            width: 208px;
+        }
+
+        .x10u46-dig-1 .vector {
+            background-color: transparent;
+            height: 240px;
+            left: 0px;
+            position: absolute;
+            top: 26px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .image_fx_-2-copy {
+            background-color: transparent;
+            height: 300px;
+            left: 1px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 300px;
+        }
+
+        .x10u46-dig-1 .business {
+            background-color: transparent;
+            height: 289px;
+            left: 296px;
+            position: absolute;
+            top: 0px;
+            width: 361px;
+        }
+
+        .x10u46-dig-1 .overlap-group3-1 {
+            background-color: transparent;
+            height: 299px;
+            left: 27px;
+            position: relative;
+            top: -11px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .business-shield {
+            left: 49px;
+            line-height: 40px;
+            text-align: center;
+            top: 259px;
+            width: 208px;
+        }
+
+        .x10u46-dig-1 .vector-4 {
+            height: 240px;
+            left: 0px;
+            top: 11px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .flux_-dev_a_lush_3d_ {
+            background-color: transparent;
+            height: 274px;
+            left: 16px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 274px;
+        }
+
+        .x10u46-dig-1 .medical {
+            background-color: transparent;
+            height: 289px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 361px;
+        }
+
+        .x10u46-dig-1 .overlap-group4 {
+            background-color: transparent;
+            height: 297px;
+            left: 0px;
+            position: relative;
+            top: -9px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .medical-1 {
+            left: 49px;
+            line-height: 40px;
+            text-align: center;
+            top: 257px;
+            width: 208px;
+        }
+
+        .x10u46-dig-1 .vector-5 {
+            height: 240px;
+            left: 0px;
+            top: 9px;
+            width: 306px;
+        }
+
+        .x10u46-dig-1 .flux_-dev_a_lush_3d_-1 {
+            background-color: transparent;
+            height: 258px;
+            left: 24px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 258px;
+        }
+
+        .x10u46-dig-1 .overlap-group7 {
+            background-color: transparent;
+            height: 539px;
+            left: 160px;
+            position: absolute;
+            top: 64px;
+            width: 1640px;
+        }
+
+        .x10u46-dig-1 .service {
+            background-color: transparent;
+            height: 398px;
+            left: 0px;
+            position: absolute;
+            top: 20px;
+            width: 784px;
+        }
+
+        .x10u46-dig-1 .we-are-here-to-make {
+            background-color: transparent;
+            height: auto;
+            left: 0px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: left;
+            top: 226px;
+            width: 760px;
+        }
+
+        .x10u46-dig-1 .insured-but-in-seconds {
+            background-color: transparent;
+            height: auto;
+            left: 0px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: 784px;
+        }
+
+        .x10u46-dig-1 .button {
+            align-items: center;
+            background-color: transparent;
+            border: 2px solid;
+            border-color: var(--mongoose);
+            border-radius: 32px;
+            display: flex;
+            gap: 8px;
+            height: 60px;
+            justify-content: center;
+            left: 0px;
+            padding: 8px;
+            position: absolute;
+            top: 338px;
+            width: 149px;
+        }
+
+        .x10u46-dig-1 .cars {
+            background-color: transparent;
+            height: 539px;
+            left: 573px;
+            position: absolute;
+            top: 0px;
+            width: 1067px;
+        }
+
+        .x10u46-dig-1 .overlap-group6 {
+            background-color: transparent;
+            height: 539px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 1067px;
+        }
+
+        .x10u46-dig-1 .rectangle-1 {
+            background-color: transparent;
+            height: 539px;
+            left: 227px;
+            position: absolute;
+            top: 0px;
+            width: 798px;
+        }
+
+        .x10u46-dig-1 .this-is-the-highest {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-s);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 283px;
+            letter-spacing: 0.00px;
+            line-height: 27px;
+            position: absolute;
+            text-align: left;
+            top: 83px;
+            width: 387px;
+        }
+
+        .x10u46-dig-1 .motor {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-bebas_neue);
+            font-size: 61px;
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 283px;
+            letter-spacing: 0.00px;
+            line-height: 53px;
+            position: absolute;
+            text-align: left;
+            top: 30px;
+            width: 784px;
+        }
+
+        .x10u46-dig-1 .mask-group-1 {
+            height: 539px;
+            width: 1025px;
+        }
+
+        .x10u46-dig-1 .yacht-1 {
+            background-color: transparent;
+            height: 289px;
+            left: 779px;
+            position: absolute;
+            top: 643px;
+            width: 362px;
+        }
+
+        .x10u46-dig-1 .group-106 {
+            background-color: transparent;
+            height: 1px;
+            left: 160px;
+            position: absolute;
+            top: 678px;
+            width: 1px;
+        }
+
+        .x10u46-dig-1 .learn-more-1 {
+            align-items: center;
+            background-color: transparent;
+            border: 2px solid;
+            border-color: var(--mongoose);
+            border-radius: 32px;
+            display: flex;
+            gap: 8px;
+            height: 60px;
+            justify-content: center;
+            left: 160px;
+            padding: 8px;
+            position: absolute;
+            top: 422px;
+            width: 149px;
+        }
+
+        .x10u46-dig-1 .overlap-group10 {
+            background-color: transparent;
+            height: 539px;
+            left: 160px;
+            position: absolute;
+            top: 214px;
+            width: 1596px;
+        }
+
+        .x10u46-dig-1 .overlap-group13 {
+            background-color: transparent;
+            height: 547px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 1600px;
+        }
+
+        .x10u46-dig-1 .overlap-group9 {
+            background-color: transparent;
+            height: 547px;
+            left: 75px;
+            position: absolute;
+            top: 0px;
+            width: 1525px;
+        }
+
+        .x10u46-dig-1 .hero-section {
+            background-color: transparent;
+            height: 539px;
+            left: 16px;
+            position: absolute;
+            top: 0px;
+            width: 1505px;
+        }
+
+        .x10u46-dig-1 .mask-group-2 {
+            height: 547px;
+            width: 1525px;
+        }
+
+        .x10u46-dig-1 .join-thousands-who-t {
+            background-color: transparent;
+            color: #b7a17b80;
+            font-family: var(--font-family-bebas_neue);
+            font-size: 51px;
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 162px;
+            letter-spacing: 0.00px;
+            line-height: 53px;
+            position: absolute;
+            text-align: left;
+            top: 30px;
+            width: 573px;
+        }
+
+        .x10u46-dig-1 .rectangle-20 {
+            background-color: transparent;
+            height: 230px;
+            left: 6px;
+            position: absolute;
+            top: 277px;
+            width: 644px;
+        }
+
+        .x10u46-dig-1 .frame-3 {
+            display: flex;
+            gap: 18px;
+            height: 67px;
+            justify-content: center;
+            left: 60px;
+            padding: 5px 29px;
+            position: absolute;
+            top: 417px;
+            width: 589px;
+        }
+
+        .x10u46-dig-1 .button-1 {
+            background-color: transparent;
+            border: 1px solid;
+            border-color: #7f7f7f;
+            border-radius: 45.95px;
+            gap: 6.94px;
+            height: 55px;
+            padding: 6.94px;
+            position: relative;
+            width: 360px;
+        }
+
+        .x10u46-dig-1 .insured-qatari-id {
+            background-color: transparent;
+            color: #b0b0b0;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .button-2 {
+            background-color: var(--mongoose-2);
+            border-radius: 45.95px;
+            gap: 6.94px;
+            height: 55.49px;
+            padding: 6.94px;
+            position: relative;
+            width: 138.73px;
+        }
+
+        .x10u46-dig-1 .sign-in {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .icon-check-circled-outline {
+            background-color: transparent;
+            height: 21px;
+            left: 168px;
+            position: absolute;
+            top: 341px;
+            width: 21px;
+        }
+
+        .x10u46-dig-1 .line-1 {
+            height: 42px;
+            left: 332px;
+            top: 329px;
+            width: 1px;
+        }
+
+        .x10u46-dig-1 .corporate {
+            background-color: transparent;
+            height: auto;
+            left: 389px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            opacity: 0.46;
+            position: absolute;
+            text-align: left;
+            top: 338px;
+            width: 139px;
+        }
+
+        .x10u46-dig-1 .rectangle-22 {
+            background-color: transparent;
+            height: 84px;
+            left: 127px;
+            position: absolute;
+            top: 193px;
+            width: 168px;
+        }
+
+        .x10u46-dig-1 .rectangle-23 {
+            background-color: transparent;
+            height: 84px;
+            left: 272px;
+            position: absolute;
+            top: 193px;
+            width: 168px;
+        }
+
+        .x10u46-dig-1 .rectangle-24 {
+            background-color: transparent;
+            height: 84px;
+            left: 417px;
+            position: absolute;
+            top: 193px;
+            width: 164px;
+        }
+
+        .x10u46-dig-1 .rectangle-21 {
+            background-color: transparent;
+            height: 84px;
+            left: 0px;
+            position: absolute;
+            top: 193px;
+            width: 150px;
+        }
+
+        .x10u46-dig-1 .group-99 {
+            background-color: transparent;
+            height: 28px;
+            left: 29px;
+            position: absolute;
+            top: 221px;
+            width: 92px;
+        }
+
+        .x10u46-dig-1 .car {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-1 .motor-1 {
+            background-color: transparent;
+            color: #1e1e1e;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 38px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 5px;
+            width: 52px;
+        }
+
+        .x10u46-dig-1 .group-92 {
+            background-color: transparent;
+            height: 23px;
+            left: 166px;
+            position: absolute;
+            top: 226px;
+            width: 93px;
+        }
+
+        .x10u46-dig-1 .vector-6 {
+            height: 19px;
+            left: -1px;
+            top: 3px;
+            width: 20px;
+        }
+
+        .x10u46-dig-1 .medical-2 {
+            left: 28px;
+            line-height: normal;
+            text-align: left;
+            top: 0px;
+            width: 63px;
+        }
+
+        .x10u46-dig-1 .group-93 {
+            background-color: transparent;
+            height: 28px;
+            left: 312px;
+            position: absolute;
+            top: 223px;
+            width: 90px;
+        }
+
+        .x10u46-dig-1 .plane {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-1 .travel-2 {
+            left: 36px;
+            line-height: normal;
+            text-align: left;
+            top: 3px;
+            width: 52px;
+        }
+
+        .x10u46-dig-1 .group-94 {
+            background-color: transparent;
+            height: 28px;
+            left: 444px;
+            position: absolute;
+            top: 224px;
+            width: 109px;
+        }
+
+        .x10u46-dig-1 .business-1 {
+            left: 37px;
+            line-height: normal;
+            text-align: left;
+            top: 2px;
+            width: 70px;
+        }
+
+        .x10u46-dig-1 .hotel {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-1 .select-your-insurance {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-s);
+            font-style: italic;
+            font-weight: 200;
+            height: auto;
+            left: 174px;
+            letter-spacing: 0.00px;
+            line-height: 53px;
+            position: absolute;
+            text-align: left;
+            top: 144px;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .individual {
+            background-color: transparent;
+            height: auto;
+            left: 194px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 339px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .overlap-group12 {
+            background-color: transparent;
+            height: 84px;
+            left: 162px;
+            position: absolute;
+            top: 30px;
+            width: 1598px;
+        }
+
+        .x10u46-dig-1 .top-navbar {
+            background-color: transparent;
+            height: 84px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 1598px;
+        }
+
+        .x10u46-dig-1 .bottom-navbar {
+            background-color: transparent;
+            height: 65px;
+            left: 1px;
+            position: absolute;
+            top: 0px;
+            width: 1597px;
+        }
+
+        .x10u46-dig-1 .menu {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            gap: 56px;
+            justify-content: center;
+            left: 499px;
+            position: absolute;
+            top: 21px;
+        }
+
+        .x10u46-dig-1 .place-1 {
+            margin-top: -1.00px;
+            position: relative;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .group-3 {
+            background-color: transparent;
+            height: 27px;
+            position: relative;
+            width: 101px;
+        }
+
+        .x10u46-dig-1 .services-1 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 0px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .chevron-down {
+            background-color: transparent;
+            height: 24px;
+            left: 75px;
+            position: absolute;
+            top: 2px;
+            width: 24px;
+        }
+
+        .x10u46-dig-1 .suggestions-and-complaints {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-nunito_sans);
+            font-size: var(--font-size-xs);
+            font-style: normal;
+            font-weight: 400;
+            height: 23px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: 228px;
+        }
+
+        .x10u46-dig-1 .button-3 {
+            background-color: var(--concrete-2);
+            border-radius: 32px;
+            gap: 8px;
+            height: 60px;
+            left: 1448px;
+            padding: 8px;
+            position: absolute;
+            top: 5px;
+            width: 149px;
+        }
+
+        .x10u46-dig-1 .log-in {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-1 .group-97 {
+            background-color: transparent;
+            height: 30px;
+            left: 1300px;
+            position: absolute;
+            top: 20px;
+            width: 100px;
+        }
+
+        .x10u46-dig-1 .language {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-poppins);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 0px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .chevron-down-1 {
+            left: 74px;
+            top: 3px;
+        }
+
+        .x10u46-dig-1 .logo-1 {
+            background-color: transparent;
+            height: 64px;
+            left: 0px;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            width: 152px;
+        }
+
+        .x10u46-dig-1 .group-4 {
+            background-color: transparent;
+            height: 52px;
+            left: 0px;
+            position: absolute;
+            top: 12px;
+            width: 79px;
+        }
+
+        .x10u46-dig-1 .group-5 {
+            background-color: transparent;
+            height: 62px;
+            left: 92px;
+            position: absolute;
+            top: 0px;
+            width: 60px;
+        }
+
+        .x10u46-dig-1 .line-1-1 {
+            background-color: transparent;
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            position: absolute;
+            top: 83px;
+            width: 1598px;
+        }
+
+        .x10u46-dig-1 .home-1 {
+            background-color: var(--white);
+            border-radius: 16.5px;
+            height: 33px;
+            left: 485px;
+            position: absolute;
+            top: 18px;
+            width: 83px;
+        }
+
+        .x10u46-dig-1 .place-2 {
+            height: auto;
+            left: 15px;
+            position: absolute;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .services-2 {
+            background-color: var(--white);
+            border-radius: 16.5px;
+            height: 33px;
+            left: 590px;
+            position: absolute;
+            top: 18px;
+            width: 127px;
+        }
+
+        .x10u46-dig-1 .services-3 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 20px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .vector-7 {
+            height: 6px;
+            left: 102px;
+            top: 13px;
+            width: 10px;
+        }
+
+        .x10u46-dig-1 .suggestions {
+            background-color: var(--white);
+            border-radius: 16.5px;
+            height: 33px;
+            left: 745px;
+            position: absolute;
+            top: 19px;
+            width: 259px;
+        }
+
+        .x10u46-dig-1 .suggestions-and-complaints-1 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-nunito_sans);
+            font-size: var(--font-size-xs);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 20px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 3px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .language-1 {
+            background-color: var(--white);
+            border-radius: 16.5px;
+            height: 33px;
+            left: 1280px;
+            position: absolute;
+            top: 19px;
+            width: 130px;
+        }
+
+        .x10u46-dig-1 .language-2 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-poppins);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 21px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 1px;
+            width: auto;
+        }
+
+        .x10u46-dig-1 .chevron-down-2 {
+            left: 95px;
+            top: 4px;
+        }
+
+        .x10u46-dig-1 .log-in-1 {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            gap: 32px;
+            justify-content: center;
+            left: 1449px;
+            position: absolute;
+            top: 5px;
+        }
+
+        .x10u46-dig-1 .button-4 {
+            background-color: var(--concrete-2);
+            border-radius: 32px;
+            gap: 8px;
+            height: 60px;
+            padding: 8px;
+            position: relative;
+            width: 149px;
+        }
+
+        .x10u46-dig-1 .auto {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-1 .business-2 {
+            background-color: transparent;
+            height: auto;
+            letter-spacing: 0.00px;
+            position: absolute;
+        }
+
+        .x10u46-dig-1 .button-5 {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .x10u46-dig-1 .chevron-down-3 {
+            background-color: transparent;
+            height: 24px;
+            position: absolute;
+            width: 24px;
+        }
+
+        .x10u46-dig-1 .frame {
+            align-items: center;
+            background-color: transparent;
+        }
+
+        .x10u46-dig-1 .group-86-3 {
+            background-color: transparent;
+            background-size: 100% 100%;
+            height: 65px;
+            left: 20px;
+            position: relative;
+            top: 17px;
+            width: 65px;
+        }
+
+        .x10u46-dig-1 .line-4 {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-1 .mask-group-3 {
+            background-color: transparent;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+        }
+
+        .x10u46-dig-1 .medical-3 {
+            background-color: transparent;
+            height: auto;
+            letter-spacing: 0.00px;
+            position: absolute;
+        }
+
+        .x10u46-dig-1 .place-3 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-align: left;
+        }
+
+        .x10u46-dig-1 .text-2 {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            white-space: nowrap;
+        }
+
+        .x10u46-dig-1 .travel-3 {
+            background-color: transparent;
+            height: auto;
+            letter-spacing: 0.00px;
+            position: absolute;
+        }
+
+        .x10u46-dig-1 .vector-8 {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        /* screen - 10u46-dig-2 */
+
+        .x10u46-dig-2 {
+            background-color: var(--white);
+            height: 4858px;
+            overflow: hidden;
+            overflow-x: hidden;
+            position: relative;
+            width: 946px;
+        }
+
+        .x10u46-dig-2 .footer-1 {
+            background-color: transparent;
+            height: 451px;
+            left: 1px;
+            position: absolute;
+            top: 4297px;
+            width: 1926px;
+        }
+
+        .x10u46-dig-2 .frame-2-1 {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            gap: 27px;
+            left: 107px;
+            position: absolute;
+            top: 410px;
+        }
+
+        .x10u46-dig-2 .logo-2 {
+            background-color: transparent;
+            height: 40.85px;
+            position: relative;
+            width: 39.66px;
+        }
+
+        .x10u46-dig-2 .x2025-doha-insuranc-1 {
+            background-color: transparent;
+            color: var(--storm-dust);
+            font-family: var(--font-family-montserrat);
+            font-size: var(--font-size-xs);
+            font-style: normal;
+            font-weight: 400;
+            height: 21px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            white-space: nowrap;
+            width: 666px;
+        }
+
+        .x10u46-dig-2 .line-2-1 {
+            background-color: transparent;
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            position: absolute;
+            top: 380px;
+            width: 945px;
+        }
+
+        .x10u46-dig-2 .overlap-group2-1 {
+            height: 255px;
+            left: 154px;
+            top: 80px;
+            width: 612px;
+        }
+
+        .x10u46-dig-2 .quick-links-about-ou-1 {
+            background-color: transparent;
+            height: auto;
+            left: 194px;
+            letter-spacing: 0.00px;
+            line-height: 24px;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .span0-1 {
+            line-height: 40px;
+        }
+
+        .x10u46-dig-2 .span1-1 {
+            color: var(--storm-dust);
+            font-style: normal;
+            font-weight: 400;
+            line-height: 50px;
+        }
+
+        .x10u46-dig-2 .span2-1 {
+            color: var(--storm-dust);
+            font-style: normal;
+            font-weight: 400;
+            line-height: 40px;
+        }
+
+        .x10u46-dig-2 .more-for-dig-about-c-1 {
+            background-color: transparent;
+            height: auto;
+            left: 315px;
+            letter-spacing: 0.00px;
+            line-height: 24px;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .overlap-group-8 {
+            background-color: transparent;
+            height: 50px;
+            left: 460px;
+            position: absolute;
+            top: 47px;
+            width: 152px;
+        }
+
+        .x10u46-dig-2 .group-32-1 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-2 .x12-1 {
+            background-color: transparent;
+            height: 26px;
+            left: 11px;
+            object-fit: cover;
+            position: absolute;
+            top: 12px;
+            width: 27px;
+        }
+
+        .x10u46-dig-2 .layer_1-1 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-1.svg);
+            background-size: 100% 100%;
+            height: 50px;
+            left: 61px;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-2 .group-6 {
+            height: 27px;
+            left: 12px;
+            top: 12px;
+            width: 26px;
+        }
+
+        .x10u46-dig-2 .group-34-1 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 41px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-2 .instagram-1 {
+            background-color: transparent;
+            height: 26px;
+            left: 12px;
+            object-fit: cover;
+            position: absolute;
+            top: 13px;
+            width: 26px;
+        }
+
+        .x10u46-dig-2 .group-35-1 {
+            background-color: var(--mongoose);
+            border-radius: 25.16px;
+            height: 50px;
+            left: 102px;
+            position: absolute;
+            top: 0px;
+            width: 50px;
+        }
+
+        .x10u46-dig-2 .linked-in-logo-of-two-letters-1 {
+            background-color: transparent;
+            height: 27px;
+            left: 13px;
+            object-fit: cover;
+            position: absolute;
+            top: 10px;
+            width: 28px;
+        }
+
+        .x10u46-dig-2 .follow-us-1 {
+            background-color: transparent;
+            color: #111111;
+            font-family: var(--font-family-open_sans);
+            font-size: var(--font-size-l);
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 460px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .overlap-group1-2 {
+            height: 251px;
+            position: absolute;
+            width: 375px;
+        }
+
+        .x10u46-dig-2 .rectangle-17-1 {
+            background-color: var(--concrete-2);
+            height: 251px;
+            left: 95px;
+            width: 280px;
+        }
+
+        .x10u46-dig-2 .download-our-app-1 {
+            background-color: transparent;
+            height: auto;
+            left: 0px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 23px;
+            white-space: nowrap;
+            width: 226px;
+        }
+
+        .x10u46-dig-2 .rectangle-19-1 {
+            background-color: transparent;
+            border: 2px solid;
+            border-color: var(--log-cabin);
+            border-radius: 13px;
+            height: 132px;
+            left: 88px;
+            position: absolute;
+            top: 77px;
+            width: 132px;
+        }
+
+        .x10u46-dig-2 .qr_code_for_mobile_-1 {
+            background-color: transparent;
+            height: 146px;
+            left: 81px;
+            object-fit: cover;
+            position: absolute;
+            top: 70px;
+            width: 146px;
+        }
+
+        .x10u46-dig-2 .line-3-1 {
+            background-color: transparent;
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            position: absolute;
+            top: -1px;
+            width: 945px;
+        }
+
+        .x10u46-dig-2 .secure-1 {
+            background-color: transparent;
+            height: 345px;
+            left: 161px;
+            position: absolute;
+            top: 3857px;
+            width: 1604px;
+        }
+
+        .x10u46-dig-2 .overlap-group3-2 {
+            background-color: transparent;
+            height: 345px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 1138px;
+        }
+
+        .x10u46-dig-2 .background-1 {
+            height: 332px;
+            top: 8px;
+            width: 785px;
+        }
+
+        .x10u46-dig-2 .at-doha-insurance-gr-2 {
+            left: 188px;
+            top: 138px;
+            width: 950px;
+        }
+
+        .x10u46-dig-2 .secure-protect-you-1 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-family: var(--font-family-bebas_neue);
+            font-size: 60px;
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 188px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 41px;
+            width: 873px;
+        }
+
+        .x10u46-dig-2 .protect-info-copy-1-1 {
+            background-color: transparent;
+            height: 345px;
+            left: 84px;
+            object-fit: cover;
+            position: absolute;
+            top: 0px;
+            width: 326px;
+        }
+
+        .x10u46-dig-2 .get-in-touch-1 {
+            background-color: transparent;
+            height: 498px;
+            left: 160px;
+            position: absolute;
+            top: 3267px;
+            width: 953px;
+        }
+
+        .x10u46-dig-2 .overlap-group4-1 {
+            background-color: transparent;
+            height: 362px;
+            left: 0px;
+            position: absolute;
+            top: 136px;
+            width: 951px;
+        }
+
+        .x10u46-dig-2 .start-chat-on-whats-app-2 {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 0px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-2 .group-10-1 {
+            background-color: transparent;
+            height: 80.87px;
+            position: relative;
+            width: 80.87px;
+        }
+
+        .x10u46-dig-2 .overlap-group-7 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-2.svg);
+            background-size: 100% 100%;
+            height: 84px;
+            left: -2px;
+            position: relative;
+            top: -2px;
+            width: 84px;
+        }
+
+        .x10u46-dig-2 .group-7 {
+            height: 47px;
+            left: 19px;
+            top: 19px;
+            width: 47px;
+        }
+
+        .x10u46-dig-2 .start-chat-on-whats-app-3 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-2 .frame-6-1 {
+            align-items: center;
+            background-color: transparent;
+            border: 0.5px solid;
+            border-color: var(--mongoose);
+            border-radius: 49px;
+            display: flex;
+            gap: 10px;
+            height: 60px;
+            justify-content: center;
+            padding: 16px 63px;
+            position: relative;
+            width: 237px;
+        }
+
+        .x10u46-dig-2 .chat-on-whats-app-1 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin-left: -30.00px;
+            margin-right: -30.00px;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .call-us-to-2 {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 214px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-2 .group-9 {
+            height: 38px;
+            left: 23px;
+            top: 23px;
+            width: 38px;
+        }
+
+        .x10u46-dig-2 .call-us-to-3 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-2 .phone-1 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            cursor: pointer;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            margin-left: -20.00px;
+            margin-right: -20.00px;
+            position: relative;
+            text-align: left;
+            text-decoration: underline;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .email-us-to-2 {
+            align-items: center;
+            background-color: var(--coconut);
+            border: 0.7px solid;
+            border-color: var(--soft-amber);
+            border-radius: 56px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            height: 362px;
+            justify-content: center;
+            left: 429px;
+            padding: 40px 66px;
+            position: absolute;
+            top: 0px;
+            width: 522px;
+        }
+
+        .x10u46-dig-2 .overlap-group-9 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/group-104@2x.png);
+            background-size: 100% 100%;
+            height: 84px;
+            left: -2px;
+            position: relative;
+            top: -2px;
+            width: 84px;
+        }
+
+        .x10u46-dig-2 .vector-8 {
+            height: 33px;
+            left: 20px;
+            top: 25px;
+            width: 43px;
+        }
+
+        .x10u46-dig-2 .email-us-to-3 {
+            background-color: transparent;
+            height: 45px;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+            width: 389px;
+        }
+
+        .x10u46-dig-2 .learn-more-2 {
+            background-color: transparent;
+            color: var(--mine-shaft);
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .title-1 {
+            background-color: transparent;
+            color: var(--onyx);
+            font-family: var(--font-family-bebas_neue);
+            font-size: var(--font-size-xxl);
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 102px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: 421px;
+        }
+
+        .x10u46-dig-2 .about-dig-2 {
+            height: 415px;
+            left: 79px;
+            top: 2752px;
+            width: 1685px;
+        }
+
+        .x10u46-dig-2 .overlap-group5-1 {
+            background-color: transparent;
+            height: 415px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 867px;
+        }
+
+        .x10u46-dig-2 .background-2 {
+            height: 415px;
+            top: 0px;
+            width: 788px;
+        }
+
+        .x10u46-dig-2 .mask-group-3 {
+            height: 415px;
+            left: 81px;
+            width: 786px;
+        }
+
+        .x10u46-dig-2 .at-doha-insurance-gr-3 {
+            left: 33px;
+            top: 184px;
+            width: 468px;
+        }
+
+        .x10u46-dig-2 .about-dig-3 {
+            height: auto;
+            left: 33px;
+            letter-spacing: 0.00px;
+            line-height: 112px;
+            text-align: left;
+            top: 72px;
+            width: 386px;
+        }
+
+        .x10u46-dig-2 .customer-reviews-1 {
+            background-color: transparent;
+            height: 342px;
+            left: 160px;
+            position: absolute;
+            top: 2310px;
+            width: 1603px;
+        }
+
+        .x10u46-dig-2 .testimonials-1 {
+            background-color: transparent;
+            color: var(--storm-dust);
+            font-family: var(--font-family-poppins);
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 243px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .client-says-about-us-1 {
+            background-color: transparent;
+            color: var(--onyx);
+            font-family: var(--font-family-bebas_neue);
+            font-size: 64px;
+            font-style: normal;
+            font-weight: 700;
+            height: auto;
+            left: 97px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: center;
+            top: 37px;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .frame-1-1 {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            gap: 38px;
+            left: 0px;
+            position: absolute;
+            top: 160px;
+        }
+
+        .x10u46-dig-2 .group-88-1 {
+            background-color: transparent;
+            height: 182.05px;
+            position: relative;
+            width: 515.08px;
+        }
+
+        .x10u46-dig-2 .overlap-group-10 {
+            background-color: transparent;
+            height: 182px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 509px;
+        }
+
+        .x10u46-dig-2 .rectangle-17-2 {
+            background-color: var(--concrete);
+            height: 182px;
+            left: 49px;
+            width: 460px;
+        }
+
+        .x10u46-dig-2 .name-2 {
+            width: 321px;
+        }
+
+        .x10u46-dig-2 .text-5 {
+            left: 451px;
+        }
+
+        .x10u46-dig-2 .lorem-ipsum-dolor-si-1 {
+            height: 65px;
+            left: 130px;
+            top: 71px;
+            width: 338px;
+        }
+
+        .x10u46-dig-2 .group-8-1 {
+            background-color: var(--coral-reef);
+            border-radius: 52.5px;
+            height: 105px;
+            left: 0px;
+            position: absolute;
+            top: 39px;
+            width: 105px;
+        }
+
+        .x10u46-dig-2 .group-86-3 {
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person-@2x.png);
+            left: 20px;
+            top: 17px;
+        }
+
+        .x10u46-dig-2 .group-87-1 {
+            background-color: transparent;
+            height: 182.05px;
+            position: relative;
+            width: 513.14px;
+        }
+
+        .x10u46-dig-2 .overlap-group1-3 {
+            height: 182px;
+            position: relative;
+            width: 507px;
+        }
+
+        .x10u46-dig-2 .rectangle-18-1 {
+            background-color: var(--concrete);
+            border-radius: 37px;
+            height: 182px;
+            left: 47px;
+            position: absolute;
+            top: 0px;
+            width: 460px;
+        }
+
+        .x10u46-dig-2 .rekha-varadwaz-manager-1 {
+            background-color: transparent;
+            height: auto;
+            left: 130px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 33px;
+            white-space: nowrap;
+            width: 345px;
+        }
+
+        .x10u46-dig-2 .text-2 {
+            left: 452px;
+        }
+
+        .x10u46-dig-2 .lorem-ipsum-dolor-si-2 {
+            height: 65px;
+            left: 130px;
+            top: 71px;
+            width: 109px;
+        }
+
+        .x10u46-dig-2 .group-86-4 {
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--1@2x.png);
+            left: 20px;
+            top: 17px;
+        }
+
+        .x10u46-dig-2 .group-89-1 {
+            background-color: transparent;
+            height: 182.05px;
+            margin-right: -6.00px;
+            position: relative;
+            width: 513.14px;
+        }
+
+        .x10u46-dig-2 .overlap-group2-2 {
+            height: 182px;
+            left: 0px;
+            top: 0px;
+            width: 507px;
+        }
+
+        .x10u46-dig-2 .name-3 {
+            width: 345px;
+        }
+
+        .x10u46-dig-2 .group-86-5 {
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--4@2x.png);
+            left: -1114px;
+            top: -2453px;
+        }
+
+        .x10u46-dig-2 .lorem-ipsum-dolor-si-3 {
+            height: 116px;
+            left: -1005px;
+            top: -2404px;
+            width: 350px;
+        }
+
+        .x10u46-dig-2 .auto-flex-1 {
+            background-color: transparent;
+            height: 408px;
+            left: 15px;
+            position: absolute;
+            top: 1040px;
+            width: 944px;
+        }
+
+        .x10u46-dig-2 .cars-1 {
+            background-color: transparent;
+            height: 392px;
+            left: 339px;
+            position: absolute;
+            top: 0px;
+            width: 605px;
+        }
+
+        .x10u46-dig-2 .overlap-group6-1 {
+            background-color: transparent;
+            height: 392px;
+            left: 0px;
+            position: relative;
+            top: 0px;
+            width: 581px;
+        }
+
+        .x10u46-dig-2 .rectangle-1-1 {
+            background-color: transparent;
+            height: 392px;
+            left: 132px;
+            position: absolute;
+            top: 0px;
+            width: 449px;
+        }
+
+        .x10u46-dig-2 .mask-group-4 {
+            height: 392px;
+            left: 0px;
+            width: 581px;
+        }
+
+        .x10u46-dig-2 .learn-more-3 {
+            align-items: center;
+            background-color: transparent;
+            border: 2px solid;
+            border-color: var(--mongoose);
+            border-radius: 32px;
+            display: flex;
+            gap: 8px;
+            height: 60px;
+            justify-content: center;
+            left: 0px;
+            padding: 8px;
+            position: absolute;
+            top: 348px;
+            width: 149px;
+        }
+
+        .x10u46-dig-2 .group-106-1 {
+            background-color: transparent;
+            height: 1px;
+            left: 160px;
+            position: absolute;
+            top: 1531px;
+            width: 1px;
+        }
+
+        .x10u46-dig-2 .overlap-group7-1 {
+            background-color: transparent;
+            background-image: url(https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/a-section-dedicated-to-modern-and-professional-insurance-website-1.png);
+            background-position: 50% 50%;
+            background-size: cover;
+            height: 621px;
+            left: 0px;
+            position: absolute;
+            top: 189px;
+            width: 941px;
+        }
+
+        .x10u46-dig-2 .join-thousands-who-t-1 {
+            background-color: transparent;
+            color: #b7a17b80;
+            font-family: var(--font-family-bebas_neue);
+            font-size: 51px;
+            font-style: normal;
+            font-weight: 400;
+            height: auto;
+            left: 241px;
+            letter-spacing: 0.00px;
+            line-height: 53px;
+            position: absolute;
+            text-align: left;
+            top: 55px;
+            width: 573px;
+        }
+
+        .x10u46-dig-2 .overlap-group10-1 {
+            background-color: transparent;
+            height: 363px;
+            left: 160px;
+            position: absolute;
+            top: 169px;
+            width: 650px;
+        }
+
+        .x10u46-dig-2 .individual-1 {
+            background-color: transparent;
+            height: auto;
+            left: 113px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 195px;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .overlap-group9-1 {
+            background-color: transparent;
+            height: 363px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 650px;
+        }
+
+        .x10u46-dig-2 .icon-check-circled-outline-1 {
+            background-color: transparent;
+            height: 21px;
+            left: 87px;
+            position: absolute;
+            top: 197px;
+            width: 21px;
+        }
+
+        .x10u46-dig-2 .line-4 {
+            background-color: transparent;
+            height: 42px;
+            left: 170px;
+            position: absolute;
+            top: 185px;
+            width: 1px;
+        }
+
+        .x10u46-dig-2 .corporate-1 {
+            background-color: transparent;
+            height: auto;
+            left: 146px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            opacity: 0.46;
+            position: absolute;
+            text-align: left;
+            top: 194px;
+            width: 139px;
+        }
+
+        .x10u46-dig-2 .rectangle-22-1 {
+            background-color: transparent;
+            height: 84px;
+            left: 126px;
+            position: absolute;
+            top: 50px;
+            width: 168px;
+        }
+
+        .x10u46-dig-2 .rectangle-23-1 {
+            background-color: transparent;
+            height: 84px;
+            left: 270px;
+            position: absolute;
+            top: 50px;
+            width: 168px;
+        }
+
+        .x10u46-dig-2 .rectangle-20-1 {
+            background-color: transparent;
+            height: 230px;
+            left: 6px;
+            position: absolute;
+            top: 133px;
+            width: 644px;
+        }
+
+        .x10u46-dig-2 .rectangle-24-1 {
+            background-color: transparent;
+            height: 84px;
+            left: 415px;
+            position: absolute;
+            top: 50px;
+            width: 164px;
+        }
+
+        .x10u46-dig-2 .frame-3-1 {
+            align-items: center;
+            background-color: transparent;
+            display: flex;
+            gap: 18px;
+            height: 67px;
+            justify-content: center;
+            left: 60px;
+            padding: 5px 29px;
+            position: absolute;
+            top: 273px;
+            width: 589px;
+        }
+
+        .x10u46-dig-2 .button-5 {
+            background-color: transparent;
+            border: 1px solid;
+            border-color: #7f7f7f;
+            border-radius: 45.95px;
+            gap: 6.94px;
+            height: 55px;
+            padding: 6.94px;
+            width: 360px;
+        }
+
+        .x10u46-dig-2 .insured-qatari-id-1 {
+            background-color: transparent;
+            color: #b0b0b0;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .button-6 {
+            background-color: var(--mongoose-2);
+            border-radius: 45.95px;
+            gap: 6.94px;
+            height: 55.49px;
+            padding: 6.94px;
+            width: 138.73px;
+        }
+
+        .x10u46-dig-2 .sign-in-1 {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .rectangle-21-1 {
+            background-color: transparent;
+            height: 84px;
+            left: 0px;
+            position: absolute;
+            top: 49px;
+            width: 150px;
+        }
+
+        .x10u46-dig-2 .group-99-1 {
+            background-color: transparent;
+            height: 28px;
+            left: 29px;
+            position: absolute;
+            top: 77px;
+            width: 92px;
+        }
+
+        .x10u46-dig-2 .car-1 {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-2 .motor-2 {
+            background-color: transparent;
+            color: #1e1e1e;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 38px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 5px;
+            width: 52px;
+        }
+
+        .x10u46-dig-2 .group-92-1 {
+            background-color: transparent;
+            box-shadow: 0px 4px 4px #00000040;
+            height: 23px;
+            left: 313px;
+            position: absolute;
+            top: 80px;
+            width: 93px;
+        }
+
+        .x10u46-dig-2 .vector-9 {
+            height: 19px;
+            left: -1px;
+            top: 3px;
+            width: 20px;
+        }
+
+        .x10u46-dig-2 .medical-3 {
+            background-color: transparent;
+            color: #393939;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 28px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            width: 63px;
+        }
+
+        .x10u46-dig-2 .group-93-1 {
+            background-color: transparent;
+            height: 28px;
+            left: 171px;
+            position: absolute;
+            top: 77px;
+            width: 90px;
+        }
+
+        .x10u46-dig-2 .plane-1 {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-2 .travel-3 {
+            background-color: transparent;
+            color: #111111a6;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 36px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 3px;
+            width: 52px;
+        }
+
+        .x10u46-dig-2 .group-94-1 {
+            background-color: transparent;
+            box-shadow: 0px 4px 4px #00000040;
+            height: 28px;
+            left: 425px;
+            position: absolute;
+            top: 77px;
+            width: 109px;
+        }
+
+        .x10u46-dig-2 .business-2 {
+            background-color: transparent;
+            color: #525252;
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-xxs);
+            font-style: normal;
+            font-weight: 500;
+            height: auto;
+            left: 37px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 2px;
+            width: 70px;
+        }
+
+        .x10u46-dig-2 .hotel-1 {
+            background-color: transparent;
+            height: 28px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 28px;
+        }
+
+        .x10u46-dig-2 .select-your-insurance-1 {
+            background-color: transparent;
+            color: var(--white);
+            font-family: var(--font-family-poppins);
+            font-size: var(--font-size-s);
+            font-style: italic;
+            font-weight: 200;
+            height: auto;
+            left: 93px;
+            letter-spacing: 0.00px;
+            line-height: 53px;
+            position: absolute;
+            text-align: left;
+            top: 0px;
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .x10u46-dig-2 .overlap-group8 {
+            background-color: transparent;
+            height: 84px;
+            left: 25px;
+            position: absolute;
+            top: 24px;
+            width: 1598px;
+        }
+
+        .x10u46-dig-2 .top-navbar-1 {
+            background-color: transparent;
+            height: 84px;
+            left: 0px;
+            position: absolute;
+            top: 0px;
+            width: 1598px;
+        }
+
+        .x10u46-dig-2 .logo-3 {
+            background-color: transparent;
+            height: 64px;
+            left: 1px;
+            overflow: hidden;
+            position: absolute;
+            top: 0px;
+            width: 152px;
+        }
+
+        .x10u46-dig-2 .group-11 {
+            height: 52px;
+            left: 0px;
+            top: 12px;
+            width: 79px;
+        }
+
+        .x10u46-dig-2 .group-12 {
+            height: 62px;
+            left: 92px;
+            top: 0px;
+            width: 60px;
+        }
+
+        .x10u46-dig-2 .line-1-2 {
+            background-color: transparent;
+            height: 1px;
+            left: 0px;
+            object-fit: cover;
+            position: absolute;
+            top: 83px;
+            width: 921px;
+        }
+
+        .x10u46-dig-2 .log-in-2 {
+            align-items: center;
+            background-color: transparent;
+            display: inline-flex;
+            gap: 32px;
+            justify-content: center;
+            left: 746px;
+            position: absolute;
+            top: 4px;
+        }
+
+        .x10u46-dig-2 .button-7 {
+            background-color: var(--concrete-2);
+            border-radius: 32px;
+            gap: 8px;
+            height: 60px;
+            padding: 8px;
+            width: 149px;
+        }
+
+        .x10u46-dig-2 .log-in-3 {
+            background-color: transparent;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: relative;
+            text-align: left;
+            width: fit-content;
+        }
+
+        .x10u46-dig-2 .about-dig {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-2 .at-doha-insurance-gr {
+            background-color: transparent;
+            height: auto;
+            letter-spacing: 0.00px;
+            line-height: 40px;
+            position: absolute;
+            text-align: left;
+        }
+
+        .x10u46-dig-2 .background {
+            background-color: transparent;
+            left: 0px;
+            position: absolute;
+        }
+
+        .x10u46-dig-2 .button {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .x10u46-dig-2 .group {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-2 .group-86 {
+            background-color: transparent;
+            background-size: 100% 100%;
+            height: 65px;
+            position: relative;
+            width: 65px;
+        }
+
+        .x10u46-dig-2 .lorem-ipsum-dolor-si {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-2 .mask-group {
+            background-color: transparent;
+            position: absolute;
+            top: 0px;
+        }
+
+        .x10u46-dig-2 .name {
+            background-color: transparent;
+            height: auto;
+            left: 130px;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 33px;
+            white-space: nowrap;
+        }
+
+        .x10u46-dig-2 .overlap-group1 {
+            background-color: transparent;
+            left: 0px;
+            top: 0px;
+        }
+
+        .x10u46-dig-2 .overlap-group2 {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        .x10u46-dig-2 .rectangle-17 {
+            border-radius: 37px;
+            position: absolute;
+            top: 0px;
+        }
+
+        .x10u46-dig-2 .text {
+            background-color: transparent;
+            height: auto;
+            letter-spacing: 0.00px;
+            line-height: normal;
+            position: absolute;
+            text-align: left;
+            top: 12px;
+            white-space: nowrap;
+            width: 31px;
+        }
+
+        .x10u46-dig-2 .vector {
+            background-color: transparent;
+            position: absolute;
+        }
+
+        @media screen and (max-width: 1919px) {
+            .screen.x10u46-dig-1 {
+                display: none;
+            }
+        }
+
+        @media screen and (min-width: 1920px) {
+            .screen.x10u46-dig-2 {
+                display: none;
+            }
+        }
+    </style>
+    <script id="anime-js-script" src="https://cdn.jsdelivr.net/npm/animejs@3.1.0/lib/anime.min.js"
+        integrity="sha256-98Q574VkbV+PkxXCKSgL6jVq9mrVbS7uCdA+vt0sLS8=" crossorigin="anonymous"></script>
+    <script id="imgloaded-js-script" src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    <style id="action-links-styles">
+        @import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
+
+        #anima-interface {
+            transition: all 0.5s ease-in-out;
+        }
+
+        #anima-watermark {
+            transition: all 0.5s ease-in-out;
+            display: none;
+        }
+
+        #anima-watermark-link {
+            position: fixed;
+            bottom: 20px;
+            height: 30px;
+            border-radius: 1000px;
+            background: #3B3B3B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+            text-decoration: none;
+            color: #fff;
+            padding: 8px 16px 8px 11px;
+            font-family: Mulish, sans-serif;
+            font-size: 12px;
+        }
+
+        #anima-watermark-link .text {
+            margin-left: 6px;
+        }
+
+        .omniview-anima-action-links .link {
+            height: 30px;
+            width: 30px;
+            border-radius: 1000px;
+            background: #3B3B3B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: width 0.25s cubic-bezier(0.175, 0.885, 0.320, 1.275);
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .omniview-anima-action-links #comment-link .text,
+        .omniview-anima-action-links #code-link .text {
+            display: none;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .omniview-anima-action-links #comment-link:hover,
+        .omniview-anima-action-links #code-link:hover {
+            width: 105px;
+        }
+
+        .omniview-anima-action-links #comment-link.pop-active,
+        .omniview-anima-action-links #code-link.pop-active {
+            width: 105px;
+            background: #FF6250;
+        }
+
+        .omniview-anima-action-links #comment-link.pop-active .text,
+        .omniview-anima-action-links #code-link.pop-active .text {
+            display: block
+        }
+
+        .omniview-anima-action-links #comment-link:hover .text,
+        .omniview-anima-action-links #code-link:hover .text {
+            display: block;
+        }
+
+        .link.navigation {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            height: 32px;
+            color: #fff;
+            font-size: 12px;
+            cursor: default;
+            padding: 0 5px;
+        }
+
+        .link.navigation .icon {
+            margin: 0 6px;
+            fill: none;
+            stroke: currentColor;
+            cursor: pointer;
+        }
+
+        .link.navigation .icon.disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+
+        .link.navigation .home-icon {
+            margin-left: 6px;
+            fill: currentColor;
+            stroke: currentColor;
+            cursor: pointer;
+        }
+
+        .omniview-anima-action-links .restart {
+            height: 30px;
+            padding: 0 12px;
+            background: #3B3B3B;
+            border-radius: 1000px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #f1f1f1;
+            font-size: 12px;
+        }
+
+        .omniview-anima-action-links {
+            display: flex;
+            align-items: center;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-family: Mulish, sans-serif;
+            transition: all 0.5s ease-in-out;
+            opacity: 1;
+        }
+
+        .omniview-anima-action-links>*+* {
+            margin-right: 0;
+            margin-left: 10px;
+        }
+
+        .idle {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #popoverOpener {
+            position: absolute;
+            left: 50%;
+            margin-left: -10vw;
+            text-align: center;
+            top: 45vh;
+            width: 20vw;
+        }
+
+
+        .popover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1060;
+            display: none;
+            font-family: "sans-serif";
+            font-size: 14px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+        }
+
+        .popover.top {
+            margin-top: -12px
+        }
+
+        .popover.right {
+            margin-left: 10px
+        }
+
+        .popover.bottom {
+            margin-top: 10px
+        }
+
+        .popover.left {
+            margin-left: -10px
+        }
+
+        .popover-title {
+            padding: 8px 14px;
+            margin: 0;
+            font-size: 14px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #ebebeb;
+            border-radius: 5px 5px 0 0
+        }
+
+        .popover-content {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            overflow: hidden;
+            font-family: Mulish, sans-serif;
+        }
+
+
+
+        .popover>.arrow,
+        .popover>.arrow:after {
+            position: absolute;
+            display: block;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid
+        }
+
+        .popover>.arrow {
+            border-width: 11px
+        }
+
+        .popover>.arrow:after {
+            content: "";
+            border-width: 10px
+        }
+
+        .popover.top>.arrow {
+            bottom: -11px;
+            left: 50%;
+            margin-left: -11px;
+            border-top-color: #999;
+            border-top-color: rgba(0, 0, 0, .25);
+            border-bottom-width: 0
+        }
+
+        .popover.top>.arrow:after {
+            bottom: 1px;
+            margin-left: -10px;
+            content: " ";
+            border-top-color: #fff;
+            border-bottom-width: 0
+        }
+
+        .popover.right>.arrow {
+            top: 50%;
+            left: -11px;
+            margin-top: -11px;
+            border-right-color: #999;
+            border-right-color: rgba(0, 0, 0, .25);
+            border-left-width: 0
+        }
+
+        .popover.right>.arrow:after {
+            bottom: -10px;
+            left: 1px;
+            content: " ";
+            border-right-color: #fff;
+            border-left-width: 0
+        }
+
+        .popover.bottom>.arrow {
+            top: -11px;
+            left: 50%;
+            margin-left: -11px;
+            border-top-width: 0;
+            border-bottom-color: #999;
+            border-bottom-color: rgba(0, 0, 0, .25)
+        }
+
+        .popover.bottom>.arrow:after {
+            top: 1px;
+            margin-left: -10px;
+            content: " ";
+            border-top-width: 0;
+            border-bottom-color: #fff
+        }
+
+        .popover.left>.arrow {
+            top: 50%;
+            right: -11px;
+            margin-top: -11px;
+            border-right-width: 0;
+            border-left-color: #999;
+            border-left-color: rgba(0, 0, 0, .25)
+        }
+
+        .popover.left>.arrow:after {
+            right: 1px;
+            bottom: -10px;
+            content: " ";
+            border-right-width: 0;
+            border-left-color: #fff
+        }
+
+
+
+        #anima-comment-popover,
+        #anima-code-popover {
+            background: #333333;
+            color: #fff;
+        }
+
+        #anima-comment-popover.top>.arrow,
+        #anima-comment-popover.top>.arrow:after,
+        #anima-code-popover.top>.arrow:after,
+        #anima-code-popover.top>.arrow {
+            border-top-color: #333;
+        }
+
+        #anima-comment-popover .btn,
+        #anima-code-popover .btn {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 6px 20px;
+            background: #FF6250;
+            color: #fff;
+            border-radius: 100px;
+            width: max-content;
+            text-decoration: none;
+        }
+
+        @media screen and (max-width: 550px) {
+            #anima-watermark-link {
+                padding: 6px !important;
+            }
+
+            #anima-watermark-link .text {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body style="margin: 0px; background: rgb(255, 255, 255); overflow-x: hidden;" dark-scroll=""><input type="hidden"
+        id="anPageName" name="page" value="10u46-dig-2">
+    <div class="x10u46-dig-1 screen " data-id="41:237">
+        <footer class="footer" data-id="41:238">
+            <div class="auto-flex auto" data-id="-6938629844092628360">
+                <div class="frame-2 frame" data-id="41:239"><img class="logo" data-id="41:240"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/logo@2x.png"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/logo@2x.png"
+                        alt="Logo">
+                    <p class="x2025-doha-insuranc" data-id="41:243">© 2025 Doha Insurance Group, Powered by Barzan
+                        Technology solutions.</p>
+                </div><img class="line-2 line-4" data-id="41:244"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-2.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-2.svg"
+                    alt="Line 2">
+            </div>
+            <div class="auto-flex2 auto" data-id="5816028659306333788">
+                <p class="quick-links-about-ou poppins-semi-bold-white-24px" data-id="41:245"><span
+                        class="span0 poppins-semi-bold-log-cabin-24px">Quick Links<br></span><span
+                        class="span1 texttext-2">About Our Company<br></span><span class="span2 texttext-2">Services WE
+                        provide<br>Career &amp; Opportunity<br>Privacy &amp; policy<br>Contact US</span></p>
+                <p class="more-for-dig-about-c poppins-semi-bold-white-24px" data-id="41:247"><span
+                        class="span0 poppins-semi-bold-log-cabin-24px">More for DIG<br></span><span
+                        class="span1 texttext-2">About Company<br></span><span class="span2 texttext-2">FAQ<br>Privacy
+                        policy<br>T&amp;C For Comprehensive<br>T&amp;C For Travel</span></p>
+                <div class="auto-flex1 auto" data-id="-3301094735730640382">
+                    <div class="group-36" data-id="41:248">
+                        <div class="group-32" data-id="41:249"><img class="x12" data-id="41:251"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/12.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/12.png"
+                                alt="12"></div>
+                        <div class="layer_1" data-id="41:253"><img class="group" data-id="41:255"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-5@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-5@2x.png"
+                                alt="Group"></div>
+                        <div class="group-34" data-id="41:259"><img class="instagram" data-id="41:261"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/instagram@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/instagram@2x.png"
+                                alt="instagram"></div>
+                        <div class="group-35" data-id="41:262"><img class="linked-in-logo-of-two-letters"
+                                data-id="41:264"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/linked-in-logo-of-two-letters.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/linked-in-logo-of-two-letters.png"
+                                alt="linked-in-logo-of-two-letters"></div>
+                    </div>
+                    <div class="follow-us" data-id="41:265">Follow Us</div>
+                </div>
+                <div class="overlap-group-3" data-id="8172163035831895051">
+                    <div class="download-our-app opensans-bold-log-cabin-24px" data-id="41:268">Download our app</div>
+                    <div class="overlap-group1" data-id="9125833561982590237">
+                        <div class="rectangle-19" data-id="41:269"></div><img class="qr_code_for_mobile_"
+                            data-id="41:270"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/qr-code-for-mobile-english-wikipedia-svg-1.png"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/qr-code-for-mobile-english-wikipedia-svg-1.png"
+                            alt="QR_code_for_mobile_English_Wikipedia.svg 1">
+                    </div>
+                </div>
+            </div><img class="line-3 line-4" data-id="41:271"
+                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-3.svg"
+                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-3.svg"
+                alt="Line 3">
+        </footer>
+        <div class="secure" data-id="41:272">
+            <div class="overlap-group2" data-id="-5924556473425542584"><img class="background" data-id="41:273"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f218841f435018d7ee3cd2/img/background-2.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f218841f435018d7ee3cd2/img/background-2.svg"
+                    alt="Background">
+                <p class="at-doha-insurance-gr poppins-normal-white-22px" data-id="41:274"><span
+                        class="poppins-normal-gray-22px">At Doha Insurance Group, innovation is at the heart of
+                        everything we do. We have a pioneering spirit that permeates through all aspects of our
+                        business.<br>This allows us to serve you better by continuously improving our products and
+                        services, setting new standards in our sector. </span><span
+                        class="poppins-semi-bold-mongoose-22px">More..</span></p>
+                <p class="secure-protect-you" data-id="41:275">Secure &amp; Protect Your Data, Our Priority</p><img
+                    class="protect-info-copy-1" data-id="41:276"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/protect-info-copy-1.png"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/protect-info-copy-1.png"
+                    alt="Protect info copy 1">
+            </div>
+        </div>
+        <div class="get-in-touch" data-id="41:277">
+            <div class="auto-flex3 auto" data-id="-4532543058663367139">
+                <div class="start-chat-on-whats-app" data-id="41:278">
+                    <div class="group-10" data-id="41:279">
+                        <div class="overlap-group" data-id="-6731328059243855899"><img class="group-1" data-id="41:281"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/group-11@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/group-11@2x.png"
+                                alt="Group"></div>
+                    </div>
+                    <div class="start-chat-on-whats-app-1 poppins-bold-gray-30px" data-id="41:284">Start Chat on
+                        WhatsApp</div>
+                    <div class="frame-6 frame" data-id="41:285">
+                        <div class="chat-on-whats-app texttext-2" data-id="41:286">Chat on WhatsApp</div>
+                    </div>
+                </div>
+                <div class="call-us-to" data-id="41:287">
+                    <div class="group-10" data-id="41:288">
+                        <div class="overlap-group" data-id="3932298431013868653"><img class="group-2" data-id="41:290"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/group-14@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/group-14@2x.png"
+                                alt="Group"></div>
+                    </div>
+                    <div class="call-us-to-1 poppins-bold-gray-30px" data-id="41:295">Call us to</div>
+                    <div class="frame-6 frame" data-id="41:296"><a href="tel:97444292777" target="_blank">
+                            <div class="phone texttext-2" data-id="41:297" data-hotspot-id="hp-0">(+974) 44292777</div>
+                        </a></div>
+                </div>
+                <div class="email-us-to" data-id="41:298">
+                    <div class="group-10" data-id="41:299">
+                        <div class="overlap-group-4" data-id="8621289704870734661"><img class="vector-1 vector-8"
+                                data-id="41:302"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/vector-24.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/vector-24.svg"
+                                alt="Vector"></div>
+                    </div>
+                    <div class="email-us-to-1 poppins-bold-gray-30px" data-id="41:303">Email us to</div>
+                    <div class="frame-6 frame" data-id="41:304">
+                        <div class="learn-more texttext-2" data-id="41:305">Learn More</div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="title" data-id="41:306">get in touch</h1>
+        </div>
+        <div class="about-dig" data-id="41:307">
+            <div class="overlap-group3" data-id="4314138315787099402"><img class="mask-group" data-id="41:309"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/mask-group-1.png"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/mask-group-1.png"
+                    alt="Mask group">
+                <p class="at-doha-insurance-gr-1 poppins-normal-white-22px" data-id="41:312"><span
+                        class="poppins-normal-gray-22px">At Doha Insurance Group, innovation is at the heart of
+                        everything we do. We have a pioneering spirit that permeates through all aspects of our
+                        business.<br>This allows us to serve you better by continuously improving our products and
+                        services, setting new standards in our sector. </span><span
+                        class="poppins-semi-bold-mongoose-22px">More..</span></p>
+                <div class="about-dig-1 bebasneue-bold-mine-shaft-96px" data-id="41:313">ABOUT DIG</div>
+            </div>
+        </div>
+        <div class="customer-reviews" data-id="41:314">
+            <div class="testimonials" data-id="41:315">TESTIMONIALS</div>
+            <div class="client-says-about-us" data-id="41:316">Client says about us</div>
+            <div class="frame-1 frame" data-id="41:317">
+                <div class="group-88" data-id="41:318">
+                    <div class="overlap-group-5" data-id="2734112503761970076">
+                        <div class="rectangle-17" data-id="41:319"></div>
+                        <p class="name opensans-bold-white-24px" data-id="41:320"><span
+                                class="opensans-bold-log-cabin-24px">Louis Saville</span><span
+                                class="opensans-normal-storm-dust-16px"> /CEO at Google inc</span></p>
+                        <div class="text-1 text-2 basicsanssf-bold-muesli-96px" data-id="41:321">”</div><img
+                            class="lorem-ipsum-dolor-si" data-id="41:322"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do-.jpg"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do-.jpg"
+                            alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.">
+                        <div class="group-8" data-id="41:323">
+                            <div class="group-86" data-id="41:327"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="group-87" data-id="41:330">
+                    <div class="overlap-group-1" data-id="1504223758426131300">
+                        <div class="rectangle-18" data-id="41:331"></div>
+                        <div class="rekha-varadwaz-manager opensans-bold-white-24px" data-id="41:332"><span
+                                class="opensans-bold-log-cabin-24px">Rekha Varadwaz</span><span
+                                class="opensans-bold-black-24px">&nbsp;</span><span
+                                class="opensans-normal-storm-dust-16px">/Manager</span></div>
+                        <div class="text basicsanssf-bold-muesli-96px" data-id="41:333">”</div><img
+                            class="lorem-ipsum-dolor-si" data-id="41:334"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--1.jpg"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--1.jpg"
+                            alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna .">
+                        <div class="group-8" data-id="41:335">
+                            <div class="group-86-1 group-86-3" data-id="41:339"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="group-89" data-id="41:342">
+                    <div class="overlap-group-1" data-id="-4194563453274793319">
+                        <div class="rectangle-18" data-id="41:343"></div>
+                        <div class="name-1 opensans-bold-white-24px" data-id="41:344"><span
+                                class="opensans-bold-log-cabin-24px">Ali Khaled</span><span
+                                class="opensans-bold-black-24px">&nbsp;</span><span
+                                class="opensans-normal-storm-dust-16px">/Manager</span></div>
+                        <div class="text basicsanssf-bold-muesli-96px" data-id="41:345">”</div><img
+                            class="lorem-ipsum-dolor-si" data-id="41:346"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--2.jpg"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--2.jpg"
+                            alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna .">
+                        <div class="group-8" data-id="41:347">
+                            <div class="group-86-2 group-86-3" data-id="41:351"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="x2-fun-fact" data-id="41:354">
+            <div class="container" data-id="41:355">
+                <div class="fun-fact" data-id="41:356">
+                    <div class="x34-k poppins-bold-mine-shaft-56px" data-id="41:357">34K +</div>
+                    <div class="success-stories poppins-medium-mongoose-16px" data-id="41:358">Success Stories</div>
+                </div><img class="line" data-id="41:359"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/line-3-5.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/line-3-5.svg"
+                    alt="Line 3">
+                <div class="fun-fact" data-id="41:360">
+                    <div class="text-4 text-2 poppins-bold-mine-shaft-56px" data-id="41:361">210 +</div>
+                    <div class="professional-team poppins-medium-mongoose-16px" data-id="41:362">Professional Team</div>
+                </div><img class="line" data-id="41:363"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-4-1.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-4-1.svg"
+                    alt="Line 4">
+                <div class="fun-fact" data-id="41:364">
+                    <div class="x54-k poppins-bold-mine-shaft-56px" data-id="41:365">54K +</div>
+                    <div class="branches-nationwide poppins-medium-mongoose-16px" data-id="41:366">Branches Nationwide
+                    </div>
+                </div><img class="line" data-id="41:367"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-5.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-5.svg"
+                    alt="Line 5">
+                <div class="fun-fact" data-id="41:368">
+                    <div class="x35-k poppins-bold-mine-shaft-56px" data-id="41:369">35K +</div>
+                    <div class="worldwide-clients poppins-medium-mongoose-16px" data-id="41:370">Worldwide Clients</div>
+                </div>
+            </div>
+        </div>
+        <div class="overlap-group11" data-id="509342489455493353">
+            <div class="services" data-id="41:371">
+                <div class="overlap-group5" data-id="-4869595734010320513">
+                    <div class="travel" data-id="41:374">
+                        <div class="overlap-group-6" data-id="9116452228453917704">
+                            <div class="travel-1 travel-3 poppins-normal-gray-22px" data-id="I41:374;260:252">Travel
+                            </div><img class="vector-2 vector-8" data-id="I41:374;537:194"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                alt="Vector"><img class="image_fx_-11-copy" data-id="I41:374;260:255"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---11--copy@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---11--copy@2x.png"
+                                alt="image_fx_ (11) copy">
+                        </div>
+                    </div>
+                    <div class="home" data-id="41:375">
+                        <div class="place poppins-normal-gray-22px" data-id="I41:375;260:227">Home</div>
+                        <div class="overlap-group1-1" data-id="7552334550714699115"><img class="vector-3 vector-8"
+                                data-id="I41:375;542:76"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                alt="Vector"><img class="image_fx_-23-copy" data-id="I41:375;260:229"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---23--copy@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---23--copy@2x.png"
+                                alt="image_fx_ (23) copy"></div>
+                    </div>
+                    <div class="yacht" data-id="41:376">
+                        <div class="overlap-group-2" data-id="-679448780009065992">
+                            <div class="boat-yacht poppins-normal-gray-22px" data-id="I41:376;260:186">Boat &amp; yacht
+                            </div><img class="vector" data-id="I41:376;547:135"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                alt="Vector"><img class="image_fx_-2-copy" data-id="I41:376;260:188"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---2--copy@2x.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---2--copy@2x.png"
+                                alt="image_fx_ (2) copy">
+                        </div>
+                    </div>
+                    <div class="business" data-id="41:377">
+                        <div class="overlap-group3-1" data-id="1531591870256635479">
+                            <div class="business-shield business-2 poppins-normal-gray-22px" data-id="I41:377;260:55">
+                                Business Shield</div><img class="vector-4 vector-8" data-id="I41:377;547:174"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                alt="Vector"><img class="flux_-dev_a_lush_3d_" data-id="I41:377;260:59"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/flux-dev-a-lush-3d-render-of-a-modern-detailed-3d-featuring-a--3.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/flux-dev-a-lush-3d-render-of-a-modern-detailed-3d-featuring-a--3.png"
+                                alt="Flux_Dev_a_lush_3d_render_of_A_modern_detailed_3D_featuring_a__3 copy 2">
+                        </div>
+                    </div>
+                    <div class="medical" data-id="41:378">
+                        <div class="overlap-group4" data-id="8159829013651407813">
+                            <div class="medical-1 medical-3 poppins-normal-gray-22px" data-id="I41:378;152:68">Medical
+                            </div><img class="vector-5 vector-8" data-id="I41:378;547:207"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                                alt="Vector"><img class="flux_-dev_a_lush_3d_-1" data-id="I41:378;152:72"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/flux-dev-a-lush-3d-render-of-a-modern-detailed-3d-heart-featur-0.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/flux-dev-a-lush-3d-render-of-a-modern-detailed-3d-heart-featur-0.png"
+                                alt="Flux_Dev_a_lush_3d_render_of_A_modern_detailed_3D_heart_featur_0 copy 1">
+                        </div>
+                    </div>
+                </div>
+                <div class="overlap-group7" data-id="-7889195044099209361">
+                    <div class="service" data-id="41:379">
+                        <p class="we-are-here-to-make poppins-normal-gray-22px" data-id="41:409">We are here to make
+                            your life easier<br>with different insurance services at the best price in the market</p>
+                        <div class="insured-but-in-seconds bebasneue-bold-mine-shaft-96px" data-id="41:410">
+                            Insured<br>But in seconds</div>
+                        <div class="button" data-id="41:411">
+                            <div class="learn-more texttext-2" data-id="41:412">Learn More</div>
+                        </div>
+                    </div>
+                    <div class="cars" data-id="41:417">
+                        <div class="overlap-group6" data-id="380211964801294235"><img class="rectangle-1"
+                                data-id="I41:417;547:315"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f218841f435018d7ee3cd2/img/rectangle-1-1.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f218841f435018d7ee3cd2/img/rectangle-1-1.svg"
+                                alt="Rectangle 1">
+                            <p class="this-is-the-highest" data-id="I41:417;547:317">This is the highest level of
+                                coverage you can get in&nbsp;Qatar!&nbsp;It has everything you and your car will ever
+                                need</p>
+                            <div class="motor" data-id="I41:417;547:316">Motor</div><img
+                                class="mask-group-1 mask-group-3" data-id="I41:417;547:325"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/mask-group.png"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/mask-group.png"
+                                alt="Mask group">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="yacht-1" data-id="50:83">
+                <div class="overlap-group-2" data-id="5545019755045222787">
+                    <div class="boat-yacht poppins-normal-gray-22px" data-id="I50:83;260:186">Boat &amp; yacht</div><img
+                        class="vector" data-id="I50:83;547:135"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-4.svg"
+                        alt="Vector"><img class="image_fx_-2-copy" data-id="I50:83;260:188"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---2--copy@2x.png"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/image-fx---2--copy@2x.png"
+                        alt="image_fx_ (2) copy">
+                </div>
+            </div><img class="group-106" data-id="41:418"
+                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--4@2x.png"
+                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--4@2x.png"
+                alt="Group 106">
+            <div class="learn-more-1" data-id="41:559">
+                <div class="learn-more texttext-2" data-id="I41:559;276:125">Learn More</div>
+            </div>
+        </div>
+        <div class="overlap-group10" data-id="-9032104815992622215">
+            <div class="overlap-group13" data-id="6678628992755025316">
+                <div class="overlap-group9" data-id="7996789355301930188"><img class="hero-section" data-id="41:425"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/hero-section-4.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/hero-section-4.svg"
+                        alt="Hero Section"><img class="mask-group-2 mask-group-3" data-id="41:426"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/mask-group-7.png"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/mask-group-7.png"
+                        alt="Mask group"></div>
+                <p class="join-thousands-who-t" data-id="41:431">Join Thousands Who Trust Us for Their Insurance Needs
+                </p><img class="rectangle-20" data-id="41:432"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-20.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-20.svg"
+                    alt="Rectangle 20">
+                <div class="frame-3 frame" data-id="41:433">
+                    <div class="button-1 button-5" data-id="41:434">
+                        <div class="insured-qatari-id" data-id="41:435">Insured Qatari ID</div>
+                    </div>
+                    <div class="button-2 button-5" data-id="41:436">
+                        <div class="sign-in" data-id="41:437">Sign in</div>
+                    </div>
+                </div><img class="icon-check-circled-outline" data-id="41:441"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--check-circled-outline-@2x.png"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--check-circled-outline-@2x.png"
+                    alt="icon &quot;check circled outline&quot;"><img class="line-1 line-4" data-id="41:444"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line.svg"
+                    alt="line">
+                <div class="corporate poppins-bold-thunder-15-6px" data-id="41:445">Corporate</div><img
+                    class="rectangle-22" data-id="41:446"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-22-1.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-22-1.svg"
+                    alt="Rectangle 22"><img class="rectangle-23" data-id="41:447"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-23.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-23.svg"
+                    alt="Rectangle 23"><img class="rectangle-24" data-id="41:448"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-24-1.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-24-1.svg"
+                    alt="Rectangle 24"><img class="rectangle-21" data-id="41:449"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-21.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-21.svg"
+                    alt="Rectangle 21">
+                <div class="group-99" data-id="41:450"><img class="car" data-id="41:451"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/car-2.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/car-2.svg"
+                        alt="Car">
+                    <div class="motor-1" data-id="41:460">Motor</div>
+                </div>
+                <div class="group-92" data-id="41:461"><img class="vector-6 vector-8" data-id="41:462"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-2.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-2.svg"
+                        alt="Vector">
+                    <div class="medical-2 medical-3 poppins-medium-pale-slate-15-6px" data-id="41:463">Medical</div>
+                </div>
+                <div class="group-93" data-id="41:464"><img class="plane" data-id="41:465"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/plane-2.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/plane-2.svg"
+                        alt="Plane">
+                    <div class="travel-2 travel-3 poppins-medium-pale-slate-15-6px" data-id="41:468">Travel</div>
+                </div>
+                <div class="group-94" data-id="41:469">
+                    <div class="business-1 business-2 poppins-medium-pale-slate-15-6px" data-id="41:470">Business</div>
+                    <img class="hotel" data-id="41:471"
+                        src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/hotel-2.svg"
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/hotel-2.svg"
+                        alt="Hotel">
+                </div>
+                <div class="select-your-insurance" data-id="41:488">Select your insurance</div>
+            </div>
+            <div class="individual poppins-bold-thunder-15-6px" data-id="41:440">Individual</div>
+        </div>
+        <div class="overlap-group12" data-id="4052129655102975239">
+            <div class="top-navbar" data-id="41:489">
+                <div class="bottom-navbar" data-id="41:491">
+                    <div class="menu" data-id="41:492">
+                        <div class="place-1 place-3 texttext-2" data-id="41:493">Home</div>
+                        <div class="group-3" data-id="41:494">
+                            <div class="services-1 texttext-2" data-id="41:495">Services</div><img class="chevron-down"
+                                data-id="41:496"
+                                src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/chevron-down-3.svg"
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/chevron-down-3.svg"
+                                alt="chevron-down">
+                        </div>
+                        <div class="suggestions-and-complaints" data-id="41:499">Suggestions and complaints</div>
+                    </div>
+                    <div class="button-3 button-5" data-id="41:503">
+                        <div class="log-in poppins-normal-chicago-20px" data-id="41:504">Log In</div>
+                    </div>
+                    <div class="group-97" data-id="41:505">
+                        <div class="language" data-id="41:506">Arabic</div><img class="chevron-down-1 chevron-down-3"
+                            data-id="41:507"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/chevron-down-1.svg"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/chevron-down-1.svg"
+                            alt="chevron-down">
+                    </div>
+                    <div class="logo-1" data-id="41:509"><img class="group-4" data-id="41:510"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-1@2x.png"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-1@2x.png"
+                            alt="Group"><img class="group-5" data-id="41:513"
+                            src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-7@2x.png"
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-7@2x.png"
+                            alt="Group"></div>
+                </div><img class="line-1-1" data-id="41:516"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-1.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line-1.svg"
+                    alt="Line 1">
+            </div>
+            <div class="home-1" data-id="41:560">
+                <div class="place-2 place-3 texttext-2" data-id="I41:560;292:78">Home</div>
+            </div>
+            <div class="services-2" data-id="41:561">
+                <div class="services-3 texttext-2" data-id="I41:561;292:85">Services</div><img class="vector-7 vector-8"
+                    data-id="I41:561;292:87"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-3.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/vector-3.svg"
+                    alt="Vector">
+            </div>
+            <div class="suggestions" data-id="41:563">
+                <div class="suggestions-and-complaints-1" data-id="I41:563;292:89">Suggestions and complaints</div>
+            </div>
+            <div class="language-1" data-id="41:564">
+                <div class="language-2" data-id="I41:564;292:152">Arabic</div><img class="chevron-down-2 chevron-down-3"
+                    data-id="I41:564;292:153"
+                    src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/chevron-down-2.svg"
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/chevron-down-2.svg"
+                    alt="chevron-down">
+            </div>
+            <div class="log-in-1" data-id="41:565">
+                <div class="button-4 button-5" data-id="I41:565;292:193">
+                    <div class="log-in poppins-normal-chicago-20px" data-id="I41:565;292:194">Log In</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="x10u46-dig-2 screen " data-id="35:111">
+        <footer class="footer-1" data-id="35:112">
+            <div class="frame-2-1" data-id="35:113"><img class="logo-2" data-id="35:114"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/logo@2x.png"
+                    alt="Logo">
+                <p class="x2025-doha-insuranc-1" data-id="35:117">© 2025 Doha Insurance Group, Powered by Barzan
+                    Technology solutions.</p>
+            </div><img class="line-2-1" data-id="35:118"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/line-2-3.svg"
+                alt="Line 2">
+            <div class="overlap-group2-1 overlap-group2" data-id="2882206391671183950">
+                <p class="quick-links-about-ou-1 poppins-semi-bold-white-24px" data-id="35:119"><span
+                        class="span0-1 poppins-semi-bold-log-cabin-24px">Quick Links<br></span><span
+                        class="span1-1 texttext-2">About Our Company<br></span><span class="span2-1 texttext-2">Services
+                        WE provide<br>Career &amp; Opportunity<br>Privacy &amp; policy<br>Contact US</span></p>
+                <p class="more-for-dig-about-c-1 poppins-semi-bold-white-24px" data-id="35:121"><span
+                        class="span0-1 poppins-semi-bold-log-cabin-24px">More for DIG<br></span><span
+                        class="span1-1 texttext-2">About Company<br></span><span
+                        class="span2-1 texttext-2">FAQ<br>Privacy policy<br>T&amp;C For Comprehensive<br>T&amp;C For
+                        Travel</span></p>
+                <div class="overlap-group-8" data-id="24893817106651555">
+                    <div class="group-32-1" data-id="35:123"><img class="x12-1" data-id="35:125"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/12.png"
+                            alt="12"></div>
+                    <div class="layer_1-1" data-id="35:127"><img class="group-6 group" data-id="35:129"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group@2x.png"
+                            alt="Group"></div>
+                    <div class="group-34-1" data-id="35:133"><img class="instagram-1" data-id="35:135"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/instagram@2x.png"
+                            alt="instagram"></div>
+                    <div class="group-35-1" data-id="35:136"><img class="linked-in-logo-of-two-letters-1"
+                            data-id="35:138"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/linked-in-logo-of-two-letters.png"
+                            alt="linked-in-logo-of-two-letters"></div>
+                </div>
+                <div class="follow-us-1" data-id="35:139">Follow Us</div>
+                <div class="overlap-group1-2 overlap-group1" data-id="-794450340440189217">
+                    <div class="rectangle-17-1 rectangle-17" data-id="35:141"></div>
+                    <div class="download-our-app-1 opensans-bold-log-cabin-24px" data-id="35:142">Download our app</div>
+                    <div class="rectangle-19-1" data-id="35:143"></div><img class="qr_code_for_mobile_-1"
+                        data-id="35:144"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/qr-code-for-mobile-english-wikipedia-svg-1.png"
+                        alt="QR_code_for_mobile_English_Wikipedia.svg 1">
+                </div>
+            </div><img class="line-3-1" data-id="35:145"
+                src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/line-3-6.svg"
+                alt="Line 3">
+        </footer>
+        <div class="secure-1" data-id="35:146">
+            <div class="overlap-group3-2" data-id="3569369386313152768"><img class="background-1 background"
+                    data-id="35:147"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/background-6.svg"
+                    alt="Background">
+                <p class="at-doha-insurance-gr-2 at-doha-insurance-gr poppins-normal-white-22px" data-id="35:148"><span
+                        class="poppins-normal-gray-22px">At Doha Insurance Group, innovation is at the heart of
+                        everything we do. We have a pioneering spirit that permeates through all aspects of our
+                        business.<br>This allows us to serve you better by continuously improving our products and
+                        services, setting new standards in our sector. </span><span
+                        class="poppins-semi-bold-mongoose-22px">More..</span></p>
+                <p class="secure-protect-you-1" data-id="35:149">Secure &amp; Protect Your Data, Our Priority</p><img
+                    class="protect-info-copy-1-1" data-id="35:150"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/protect-info-copy-1.png"
+                    alt="Protect info copy 1">
+            </div>
+        </div>
+        <div class="get-in-touch-1" data-id="35:151">
+            <div class="overlap-group4-1" data-id="3921625776655100062">
+                <div class="start-chat-on-whats-app-2" data-id="35:152">
+                    <div class="group-10-1" data-id="35:153">
+                        <div class="overlap-group-7" data-id="7744195294034669408"><img class="group-7 group"
+                                data-id="35:155"
+                                src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/group-1@2x.png"
+                                alt="Group"></div>
+                    </div>
+                    <div class="start-chat-on-whats-app-3 poppins-bold-gray-30px" data-id="35:158">Start Chat on
+                        WhatsApp</div>
+                    <div class="frame-6-1" data-id="35:159">
+                        <div class="chat-on-whats-app-1 texttext-2" data-id="35:160">Chat on WhatsApp</div>
+                    </div>
+                </div>
+                <div class="call-us-to-2" data-id="35:161">
+                    <div class="group-10-1" data-id="35:162">
+                        <div class="overlap-group-7" data-id="-7219939264910526221"><img class="group-9 group"
+                                data-id="35:164"
+                                src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/group-17@2x.png"
+                                alt="Group"></div>
+                    </div>
+                    <div class="call-us-to-3 poppins-bold-gray-30px" data-id="35:169">Call us to</div>
+                    <div class="frame-6-1" data-id="35:170"><a href="tel:97444292777" target="_blank">
+                            <div class="phone-1 texttext-2" data-id="35:171" data-hotspot-id="hp-1">(+974) 44292777
+                            </div>
+                        </a></div>
+                </div>
+                <div class="email-us-to-2" data-id="35:172">
+                    <div class="group-10-1" data-id="35:173">
+                        <div class="overlap-group-9" data-id="5916128650238892481"><img class="vector-8 vector"
+                                data-id="35:176"
+                                src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                                anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f210f5f10c5b1906601142/img/vector-3.svg"
+                                alt="Vector"></div>
+                    </div>
+                    <div class="email-us-to-3 poppins-bold-gray-30px" data-id="35:177">Email us to</div>
+                    <div class="frame-6-1" data-id="35:178">
+                        <div class="learn-more-2 texttext-2" data-id="35:179">Learn More</div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="title-1" data-id="35:180">get in touch</h1>
+        </div>
+        <div class="about-dig-2 about-dig" data-id="35:181">
+            <div class="overlap-group5-1" data-id="-6995601684582259803"><img class="background-2 background"
+                    data-id="35:182"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/background-7.svg"
+                    alt="Background"><img class="mask-group-3 mask-group" data-id="35:183"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/mask-group-8.png"
+                    alt="Mask group">
+                <p class="at-doha-insurance-gr-3 at-doha-insurance-gr poppins-normal-white-22px" data-id="35:186"><span
+                        class="poppins-normal-gray-22px">At Doha Insurance Group, innovation is at the heart of
+                        everything we do. We have a pioneering spirit that permeates through all aspects of our
+                        business.<br>This allows us to serve you better by continuously improving our products and
+                        services, setting new standards in our sector. </span><span
+                        class="poppins-semi-bold-mongoose-22px">More..</span></p>
+                <div class="about-dig-3 about-dig bebasneue-bold-mine-shaft-96px" data-id="35:187">ABOUT DIG</div>
+            </div>
+        </div>
+        <div class="customer-reviews-1" data-id="35:188">
+            <div class="testimonials-1" data-id="35:189">TESTIMONIALS</div>
+            <div class="client-says-about-us-1" data-id="35:190">Client says about us</div>
+            <div class="frame-1-1" data-id="35:191">
+                <div class="group-88-1" data-id="35:192">
+                    <div class="overlap-group-10" data-id="6427530699882681594">
+                        <div class="rectangle-17-2 rectangle-17" data-id="35:193"></div>
+                        <p class="name-2 name opensans-bold-white-24px" data-id="35:194"><span
+                                class="opensans-bold-log-cabin-24px">Louis Saville</span><span
+                                class="opensans-normal-storm-dust-16px"> /CEO at Google inc</span></p>
+                        <div class="text-5 text basicsanssf-bold-muesli-96px" data-id="35:195">”</div><img
+                            class="lorem-ipsum-dolor-si-1 lorem-ipsum-dolor-si" data-id="35:196"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do-.jpg"
+                            alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.">
+                        <div class="group-8-1" data-id="35:197">
+                            <div class="group-86-3 group-86" data-id="35:201"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="group-87-1" data-id="35:204">
+                    <div class="overlap-group1-3 overlap-group1" data-id="-7512537699418038260">
+                        <div class="rectangle-18-1" data-id="35:205"></div>
+                        <div class="rekha-varadwaz-manager-1 opensans-bold-white-24px" data-id="35:206"><span
+                                class="opensans-bold-log-cabin-24px">Rekha Varadwaz</span><span
+                                class="opensans-bold-black-24px">&nbsp;</span><span
+                                class="opensans-normal-storm-dust-16px">/Manager</span></div>
+                        <div class="text-2 text basicsanssf-bold-muesli-96px" data-id="35:207">”</div><img
+                            class="lorem-ipsum-dolor-si-2 lorem-ipsum-dolor-si" data-id="35:208"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--10.jpg"
+                            alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna .">
+                        <div class="group-8-1" data-id="35:209">
+                            <div class="group-86-4 group-86" data-id="35:213"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="group-89-1" data-id="35:216">
+                    <div class="overlap-group2-2 overlap-group2" data-id="-2896523592302062794">
+                        <div class="rectangle-18-1" data-id="35:217"></div>
+                        <div class="name-3 name opensans-bold-white-24px" data-id="35:218"><span
+                                class="opensans-bold-log-cabin-24px">Ali Khaled</span><span
+                                class="opensans-bold-black-24px">&nbsp;</span><span
+                                class="opensans-normal-storm-dust-16px">/Manager</span></div>
+                        <div class="text-2 text basicsanssf-bold-muesli-96px" data-id="35:219">”</div>
+                        <div class="group-8-1" data-id="35:221">
+                            <div class="group-86-5 group-86" data-id="35:225"></div>
+                        </div>
+                    </div><img class="lorem-ipsum-dolor-si-3 lorem-ipsum-dolor-si" data-id="35:220"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/lorem-ipsum-dolor-sit-amet--consectetur-adipiscing-elit--sed-do--4.jpg"
+                        alt="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna .">
+                </div>
+            </div>
+        </div>
+        <div class="auto-flex-1" data-id="4298402527768750488">
+            <div class="cars-1" data-id="35:298">
+                <div class="overlap-group6-1" data-id="-1866292827201418282"><img class="rectangle-1-1"
+                        data-id="I35:298;547:315"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/rectangle-1-2.svg"
+                        alt="Rectangle 1"><img class="mask-group-4 mask-group" data-id="I35:298;547:325"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f76db7b7f53aba631d003e/img/mask-group-8.png"
+                        alt="Mask group"></div>
+            </div>
+            <div class="learn-more-3" data-id="35:443">
+                <div class="learn-more-2 texttext-2" data-id="I35:443;276:125">Learn More</div>
+            </div>
+        </div><img class="group-106-1" data-id="35:299"
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--person--4@2x.png"
+            alt="Group 106">
+        <div class="overlap-group7-1" data-id="-4008736532192475457">
+            <p class="join-thousands-who-t-1" data-id="35:314">Join Thousands Who Trust Us for Their Insurance Needs</p>
+            <div class="overlap-group10-1" data-id="7414561588524418830">
+                <div class="individual-1 poppins-bold-thunder-15-6px" data-id="35:324">Individual</div>
+                <div class="overlap-group9-1" data-id="1452382462951167546"><img class="icon-check-circled-outline-1"
+                        data-id="35:325"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/---icon--check-circled-outline-@2x.png"
+                        alt="icon &quot;check circled outline&quot;"><img class="line-4" data-id="35:328"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/line.svg"
+                        alt="line">
+                    <div class="corporate-1 poppins-bold-thunder-15-6px" data-id="35:329">Corporate</div><img
+                        class="rectangle-22-1" data-id="35:330"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/rectangle-22-3.svg"
+                        alt="Rectangle 22"><img class="rectangle-23-1" data-id="35:331"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/rectangle-23-3.svg"
+                        alt="Rectangle 23"><img class="rectangle-20-1" data-id="35:316"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-20.svg"
+                        alt="Rectangle 20"><img class="rectangle-24-1" data-id="35:332"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/rectangle-24-3.svg"
+                        alt="Rectangle 24">
+                    <div class="frame-3-1" data-id="35:317">
+                        <div class="button-5 button" data-id="35:318">
+                            <div class="insured-qatari-id-1" data-id="35:319">Insured Qatari ID</div>
+                        </div>
+                        <div class="button-6 button" data-id="35:320">
+                            <div class="sign-in-1" data-id="35:321">Sign in</div>
+                        </div>
+                    </div><img class="rectangle-21-1" data-id="35:333"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/rectangle-21.svg"
+                        alt="Rectangle 21">
+                    <div class="group-99-1" data-id="35:334"><img class="car-1" data-id="35:335"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/car-3.svg"
+                            alt="Car">
+                        <div class="motor-2" data-id="35:344">Motor</div>
+                    </div>
+                    <div class="group-92-1" data-id="35:345"><img class="vector-9 vector" data-id="35:346"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/vector-41.svg"
+                            alt="Vector">
+                        <div class="medical-3" data-id="35:347">Medical</div>
+                    </div>
+                    <div class="group-93-1" data-id="35:348"><img class="plane-1" data-id="35:349"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/plane-3.svg"
+                            alt="Plane">
+                        <div class="travel-3" data-id="35:352">Travel</div>
+                    </div>
+                    <div class="group-94-1" data-id="35:353">
+                        <div class="business-2" data-id="35:354">Business</div><img class="hotel-1" data-id="35:355"
+                            src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                            anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/hotel-3.svg"
+                            alt="Hotel">
+                    </div>
+                    <div class="select-your-insurance-1" data-id="35:372">Select your insurance</div>
+                </div>
+            </div>
+        </div>
+        <div class="overlap-group8" data-id="75513070240623771">
+            <div class="top-navbar-1" data-id="35:373">
+                <div class="logo-3" data-id="35:393"><img class="group-11 group" data-id="35:394"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-1@2x.png"
+                        alt="Group"><img class="group-12 group" data-id="35:397"
+                        src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                        anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67d92d44bf19a8c8ca73f1d5/img/group-2@2x.png"
+                        alt="Group"></div><img class="line-1-2" data-id="35:400"
+                    src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
+                    anima-src="https://cdn.animaapp.com/projects/646522726827844245615ca1/releases/67f24200958e373a6f6c4247/img/line-1-3.svg"
+                    alt="Line 1">
+            </div>
+            <div class="log-in-2" data-id="35:449">
+                <div class="button-7 button" data-id="I35:449;292:193">
+                    <div class="log-in-3 poppins-normal-chicago-20px" data-id="I35:449;292:194">Log In</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="launchpad-js/launchpad-banner.js" async=""></script>
+    <script defer="" src="https://animaapp.s3.amazonaws.com/static/restart-btn.min.js"></script>
+    <div id="hotspots_wrapper">
+        <div class="hotspot" id="hp-0"
+            style="width: 149px; height: 53px; top: 3655.66px; left: 885.723px; z-index: -1; opacity: 0;"></div>
+        <div class="hotspot" id="hp-1"
+            style="width: 0px; height: 0px; top: 816.25px; left: 0px; z-index: -1; opacity: 0;"></div>
+    </div>
+    <div id="t_preload_links">
+        <link href="/10u46-dig-1" rel="prefetch">
+        <link href="/10u46-dig" rel="prefetch">
+        <link
+            href="/wwwu46teslau46com-by-htmlu46tou46design-u10084u65039-free-version-21u4708u472024u44-8u5811u5830-gmtu433"
+            rel="prefetch">
+        <link href="/start-here" rel="prefetch">
+    </div>
+    <div id="anima-interface" data-turbo-permanent="true" class="idle"><!---->
+        <div id="anima-comment-popover" class="popover top" role="tooltip" style="left: -205px; top: -220px;">
+            <div class="arrow" style="margin-left: 128px;"></div>
+            <div class="popover-content" style="align-items:center">
+                <div style="display:flex;flex-direction:column;height: 100%;padding: 20px;">
+                    <h3
+                        style="font-size:18px;margin-bottom:10px;font-weight:500;line-height: 26px;font-family: Roslindale;">
+                        Leave feedback and collaborate
+                    </h3>
+                    <p style="font-size:12px;margin-bottom:20px;font-weight:400;line-height: 20px;">
+                        Login to your account to leave comments. Don't have an account?
+                        Sign up for free!
+                    </p>
+                    <a target="_blank" rel="noopener noreferrer" class="btn"
+                        href="https://projects.animaapp.com/p/undefined/s/undefined?mode=comments&amp;utm_campaign=add-comment&amp;utm_medium=add-comment&amp;utm_source=animaapp.io">Add
+                        comment</a>
+                </div>
+
+                <div style="display:flex;align-items:center;justify-content:center;padding-right:20px">
+                    <img src="https://animaapp.s3.amazonaws.com/static/comment-illustration.svg">
+                </div>
+            </div>
+        </div>
+        <div id="anima-code-popover" class="popover top" role="tooltip" style="left: -205px; top: -220px;">
+            <div class="arrow" style="margin-left: 168px;"></div>
+            <div class="popover-content" style="align-items:center">
+                <div style="display:flex;flex-direction:column;height: 100%;padding: 20px;">
+                    <h3
+                        style="font-size:18px;margin-bottom:10px;font-weight:500;line-height: 26px;font-family: Roslindale;">
+                        Get clean code you’ll love with Anima
+                    </h3>
+                    <p style="font-size:12px;margin-bottom:20px;font-weight:400;line-height: 20px;">
+                        Login and easily export HTML, React or Vue of this prototype.
+                        Don’t have an account? Sign up for free!
+                    </p>
+                    <a target="_blank" rel="noopener noreferrer" class="btn"
+                        href="https://projects.animaapp.com/p/undefined/s/undefined?mode=code&amp;utm_campaign=get-code&amp;utm_medium=get-code&amp;utm_source=animaapp.io">
+                        Get code
+                    </a>
+                </div>
+
+                <img src="https://animaapp.s3.amazonaws.com/static/code-illustration.svg">
+            </div>
+        </div>
+        <div class="omniview-anima-action-links" id="actions-wrap">
+            <div class="omniview-anima-action-links">
+                <div id="page-nav" class="link navigation" style="display: none;">
+                    <svg id="homepage-icon" class="home-icon" width="24" height="24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M8.151 11a.25.25 0 01-.167-.436l4.349-3.913a.25.25 0 01.334 0l4.349 3.913a.25.25 0 01-.167.436H8.15zM16 12H9v4a1 1 0 001 1h5a1 1 0 001-1v-4z"
+                            fill="#fff"></path>
+                    </svg>
+
+                    <svg class="icon" id="arrow-left" width="24" height="24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+
+                    <span id="page-num"></span>
+
+                    <svg class="icon" id="arrow-right" width="24" height="24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+
+                <a class="link" id="comment-link" target="_blank" style="display: none;">
+                    <span class="text">Comment</span>
+                    <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M4.301 15.137a.551.551 0 01.199-.55c.314-.23.554-.554.718-.965A6.015 6.015 0 014 10 6.006 6.006 0   0110.001 4 6.006 6.006 0 0116 10.001 6.006 6.006 0 019.999 16a5.98 5.98 0 01-3.095-.86 3.165 3.165 0 01-1.65.438 3.6  3.6 0 01-.57-.044c-.191-.03-.34-.186-.383-.397z"
+                            fill="#fff"></path>
+                    </svg>
+                </a>
+
+                <a class="link" id="code-link" target="_blank" style="display: none;">
+                    <span class="text">Get Code</span>
+                    <svg width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 15.667a1 1 0 01-.707-1.708l3.626-3.625-3.626-3.626a1 1 0 111.415-1.415l4.333 4.333a1 1 0 010 1.414l-4.333 4.333a.993.993 0 01-.707.294zM7.333 5a1 1 0 01.707 1.708l-3.626 3.625 3.627 3.626a1 1 0 11-1.415 1.415L2.293 11.04a1 1 0 010-1.415l4.333-4.333A.992.992 0 017.333 5z"
+                            fill="#fff"></path>
+                    </svg>
+                </a>
+
+                <div class="restart" id="restart-btn" style="display: none;">
+                    <svg style="margin-right: 6px" width="12" height="12" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M6 11.817A5.017 5.017 0 01.994 6.811c0-.207.169-.375.375-.375s.375.168.375.375A4.265 4.265 0 006 11.067a4.265 4.265 0 004.256-4.256A4.265 4.265 0 006 2.555a.376.376 0 01-.375-.376c0-.206.169-.374.375-.374a5.017 5.017 0 015.006 5.006A5.017 5.017 0 016 11.817z"
+                            fill="#fff"></path>
+                        <path
+                            d="M6.75 4.237a.37.37 0 01-.263-.112l-1.65-1.65a.363.363 0 010-.525L6.487.3c.15-.15.375-.15.525 0 .15.15.15.375 0 .525L5.625 2.212 7.012 3.6c.15.15.15.375 0 .525-.056.075-.15.112-.262.112z"
+                            fill="#fff"></path>
+                    </svg>
+                    Restart
+                </div>
+            </div>
+        </div>
+        <!---->
+    </div>
+    <div id="anima-watermark" style="display: none;" class="idle"><!----><a id="anima-watermark-link" target="_blank"
+            href="https://www.animaapp.com?utm_campaign=public-link-banner&amp;utm_medium=public-link-banner&amp;utm_source=animaapp.io"
+            style="right: 20px; left: auto; padding: 6px;">
+            <svg width="20" height="20" viewBox="0 0 20 20" id="anima-logo-icon" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M4.09293 3.00001H16.5327C16.5484 2.99976 16.5638 3.00351 16.5776 3.01092C16.5913 3.01832 16.603 3.02913 16.6114 3.04231C16.6198 3.0555 16.6247 3.07061 16.6256 3.08622C16.6265 3.10182 16.6233 3.1174 16.6165 3.13146C15.5441 5.29706 13.9276 7.14699 11.9253 8.50009C8.69117 10.6822 5.43436 10.9075 4.09389 10.9196C4.08165 10.9198 4.06949 10.9176 4.05811 10.9131C4.04672 10.9086 4.03636 10.9019 4.02761 10.8933C4.01887 10.8848 4.01192 10.8745 4.00718 10.8633C4.00244 10.852 4 10.8399 4 10.8276V3.09198C4 3.07982 4.00241 3.06778 4.00709 3.05656C4.01177 3.04534 4.01863 3.03516 4.02728 3.02661C4.03592 3.01805 4.04617 3.0113 4.05744 3.00673C4.06871 3.00217 4.08077 2.99988 4.09293 3.00001Z"
+                    fill="#FF6250"></path>
+                <path
+                    d="M6.77772 17.4446C8.31182 17.4446 9.55545 16.201 9.55545 14.6669C9.55545 13.1328 8.31182 11.8892 6.77772 11.8892C5.24363 11.8892 4 13.1328 4 14.6669C4 16.201 5.24363 17.4446 6.77772 17.4446Z"
+                    fill="#FFDF90"></path>
+                <path
+                    d="M12.4559 17.2799C11.6701 16.9799 11.2522 16.1151 11.5185 15.3496L13.6153 9.3656C13.884 8.60003 14.7387 8.22302 15.5245 8.52299C16.3103 8.82344 16.7282 9.68772 16.4619 10.4538L14.365 16.4377C14.0964 17.2033 13.2417 17.5808 12.4559 17.2799Z"
+                    fill="#3366FF"></path>
+            </svg>
+            <span class="text" style="display: none;">Made with Anima</span>
+        </a><!----></div>
+</body>
+
+</html>

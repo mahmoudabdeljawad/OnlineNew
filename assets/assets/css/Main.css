@@ -1,0 +1,586 @@
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+.mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.max-w-\[530px\] {
+    max-width: 530px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+@media (min-width: 992px) {
+    .lg\:ml-0 {
+        margin-left: 0px;
+    }
+
+    .lg\:text-left {
+        text-align: left;
+    }
+}
+
+.mt-20 {
+    margin-top: 5rem;
+}
+
+.max-w-\[435px\] {
+    max-width: 435px;
+}
+
+@media (min-width: 992px) {
+    .lg\:mt-0 {
+        margin-top: 0px;
+    }
+}
+
+h2 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+h2 {
+    margin: 0;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.text-black {
+    --tw-text-opacity: 1;
+    color: rgb(24 28 49 / var(--tw-text-opacity));
+}
+
+@media (min-width: 575px) {
+    .sm\:text-4xl {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .md\:text-\[38px\] {
+        font-size: 38px;
+    }
+
+    .md\:leading-tight {
+        line-height: 1.25;
+    }
+}
+
+p {
+    margin: 0;
+}
+
+.mb-10 {
+    margin-bottom: 2.5rem;
+}
+
+.text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+}
+
+.text-body {
+    --tw-text-opacity: 1;
+    color: rgb(121 128 138 / var(--tw-text-opacity));
+}
+
+.-mx-\[10px\] {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+@media (min-width: 992px) {
+    .lg\:justify-start {
+        justify-content: flex-start;
+    }
+}
+
+
+.max-w-full {
+    max-width: 100%;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.left-0 {
+    left: 0px;
+}
+
+.right-0 {
+    right: 0px;
+}
+
+.-top-5 {
+    top: -1.25rem;
+}
+
+.-z-10 {
+    z-index: -10;
+}
+
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.bg-gradient-2 {
+    background-image: linear-gradient(120.12deg, #e0c087 0%, #B99F70 100%);
+}
+
+.top-0 {
+    top: 0px;
+}
+
+.bottom-0 {
+    bottom: 0px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.px-\[10px\] {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+svg {
+    display: block;
+    vertical-align: middle;
+}
+
+
+
+.mb-5 {
+    margin-bottom: 1.25rem;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.rounded-md {
+    border-radius: 0.375rem;
+}
+
+.bg-primary {
+    --tw-bg-opacity: 1;
+    background-color: #B99F70;
+}
+
+.py-\[10px\] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.pl-4 {
+    padding-left: 1rem;
+}
+
+.pr-5 {
+    padding-right: 1.25rem;
+}
+
+
+
+.hover\:bg-opacity-90:hover {
+    --tw-bg-opacity: 0.9;
+}
+
+.bg-black {
+    --tw-bg-opacity: 1;
+    background-color: #000;
+}
+
+.bg-black {
+    &:where(.dark, .dark *) {
+        background-color: #fff;
+        color: black;
+    }
+}
+
+.mr-\[10px\] {
+    margin-right: 10px;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.block {
+    display: block;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.opacity-70 {
+    opacity: 0.7;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 20px, 0);
+        opacity: 0;
+        transform: translate3d(0px, 20px, 0px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        transform: translate3d(0px, 0px, 0px);
+    }
+
+}
+
+/* These were inline style tags. Uses id+class to override almost everything */
+#style-IOJy7.style-IOJy7 {
+    visibility: visible;
+    animation-delay: 0.2s;
+}
+
+#style-1Hq2R.style-1Hq2R {
+    visibility: visible;
+    animation-delay: 0.3s;
+}
+
+
+
+
+
+@media (max-width: 720px) {
+
+    .OurServicesSection>div,
+    .OurServicesSection1>div {
+        width: 100%;
+        height: 95%;
+    }
+
+    .BSCard {
+        width: 100%;
+        height: 100%;
+    }
+
+    .MTCARD {
+        width: 100%;
+        height: 95%;
+    }
+
+    .MTCARD img {
+        width: 90%;
+    }
+
+    .BSTravel {
+        width: 100%;
+        height: 95%;
+    }
+}
+
+@media (max-width: 960px) and (min-width: 720px) {
+    .MTCARD img {
+        position: relative;
+        top: 30px;
+        left: 27px;
+    }
+
+    .YTCard img {
+        width: 100%;
+        left: 27%;
+    }
+
+    .BSTravel img {
+        width: 130%;
+        height: auto;
+        position: relative;
+        top: 38px;
+        left: 19%;
+        max-width: 405px;
+    }
+}
+
+
+
+@media (max-width: 1140px) {
+    .loginForm{
+        min-width: 461.52px;
+    }
+
+}
+@media (max-width: 500px) {
+    .loginForm{
+        min-width: 461.52px;
+    }
+
+}
+
+
+@media (max-width: 1140px) {
+    .SRMotorCard {
+        background-size: 564px;
+        background-repeat: no-repeat;
+        background-position: 40px 66px;
+    }
+
+    .SRTravelCard {
+        background-size: 360px !important;
+        background-repeat: no-repeat;
+        background-position: 40px 29px !important;
+    }
+
+    .SRMedicalCard {
+        background-size: 367px;
+        background-position: 33px 28px !important;
+    }
+
+    .SRHomeCard {
+        background-size: 411px;
+        background-position: 10px -5px !important;
+    }
+
+
+    .Yacht {
+        background-size: 85%;
+        background-position: calc(var(--spacing) * 20) calc(var(--spacing) * 2) !important;
+        width: calc(var(--spacing) * 73);
+    }
+
+    .SRBusiness {
+        background-size: 85%;
+        background-position: calc(var(--spacing) * 26) !important;
+        width: calc(var(--spacing) * 73);
+    }
+}
+
+@media (max-width: 960px) {
+    .ServiceCardSecondSectionText {
+        position: absolute;
+        margin-left: 16px;
+        margin-top: 35px;
+        margin: lef;
+        font-size: 30px;
+        text-align: left;
+    }
+
+    .SRMotorCard {
+        background-size: 46vw;
+        background-repeat: no-repeat;
+        background-position: -3px 116px !important;
+    }
+
+    .SRTravelCard {
+        background-size: 38vh !important;
+        background-repeat: no-repeat;
+        background-position: -1vh 6vh !important;
+    }
+
+    .SRMedicalCard {
+        background-size: 38vh;
+        background-position: -2vh 6vh !important;
+    }
+
+    .SRHomeCard {
+        background-size: 40vh;
+        background-position: -3vh 3vh !important;
+    }
+
+    .Yacht {
+        background-size: 85%;
+        background-position: calc(var(--spacing) * 15) calc(var(--spacing) * 10) !important;
+        width: calc(var(--spacing) * 54);
+    }
+
+    .SRBusiness {
+        background-size: 85%;
+        background-position: calc(var(--spacing) * 24) !important;
+        width: calc(var(--spacing) * 54);
+    }
+}
+
+@media (max-width: 720px) {
+
+    .OurServicesSection,
+    .OurServicesSection1 {
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: auto;
+    }
+
+    .OurServicesSection1 {
+        gap: 35px !important;
+        margin-top: 25px;
+    }
+
+    /* Adjust items to not span multiple columns */
+    .OurServicesSection_div1,
+    .OurServicesSection_div2,
+    .OurServicesSection_div3,
+    .OurServicesSection1_div1,
+    .OurServicesSection1_div2,
+    .OurServicesSection1_div3 {
+        max-height: 40vh !important;
+
+        height: 40vh !important;
+        max-width: 100vh !important;
+        width: 100vh !important;
+        grid-column: span 1 !important;
+        grid-row: auto !important;
+        width: 100% !important;
+    }
+
+    .SRMotorCard {
+        height: 40vh !important;
+        background-size: 74vh !important;
+        background-repeat: no-repeat;
+        background-position: 8vh 2vh !important;
+    }
+
+
+    .Yacht {
+        height: 40vh !important;
+        width: 100% !important;
+        background-size: 98vh;
+        background-repeat: no-repeat;
+        background-position: -1vh -21vh !important;
+    }
+
+    .SRTravelCard {
+        background-size: 62vh !important;
+        background-repeat: no-repeat;
+        background-position: 31vh -10vh !important;
+    }
+
+    .SRMedicalCard {
+        background-size: 59vh;
+        background-position: 32vh -7vh !important;
+    }
+
+    .SRBusiness {
+        height: 40vh !important;
+        width: 100% !important;
+        background-size: 57vh;
+        background-repeat: no-repeat;
+        background-position: 287px -64px !important;
+    }
+
+    .SRHomeCard {
+        background-size: 60vh;
+        background-position: 32vh -9vh !important;
+    }
+
+}
+
+@media (max-width: 640px) {
+
+    .OurServicesSection_div1,
+    .OurServicesSection_div2,
+    .OurServicesSection_div3,
+    .OurServicesSection1_div1,
+    .OurServicesSection1_div2,
+    .OurServicesSection1_div3 {
+        max-height: 30vh !important;
+
+        height: 30vh !important;
+        max-width: 100vh !important;
+        width: 100vh !important;
+        grid-column: span 1 !important;
+        grid-row: auto !important;
+        width: 100% !important;
+    }
+
+    .OurServicesSection1 {
+        gap: 25px !important;
+        margin-top: 25px;
+    }
+
+    .SRMotorCard {
+        height: 30vh !important;
+        width: 100% !important;
+        background-size: 70% !important;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 40) calc(var(--spacing) * 20) !important;
+    }
+
+
+    .Yacht {
+        height: 30vh !important;
+        width: 100% !important;
+        background-size: 62vh;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 20) !important;
+    }
+
+    .SRTravelCard {
+        height: 30vh !important;
+        background-size: 84% !important;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 43) !important;
+    }
+
+    .SRMedicalCard {
+        height: 30vh !important;
+        width: 100% !important;
+        background-size: 80%;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 45) !important
+    }
+
+    .SRBusiness {
+        height: 30vh !important;
+        width: 100% !important;
+        background-size: 65%;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 51) !important;
+    }
+
+    .SRHomeCard {
+        height: 30vh !important;
+        width: 100% !important;
+        background-size: 73%;
+        background-repeat: no-repeat;
+        background-position: calc(var(--spacing) * 49) !important;
+    }
+
+}
