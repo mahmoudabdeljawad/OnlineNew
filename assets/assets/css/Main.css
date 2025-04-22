@@ -352,7 +352,7 @@ svg {
 }
 @media (max-width: 500px) {
     .loginForm{
-        min-width: 461.52px;
+        min-width: 300.52px !important;
     }
 
 }
